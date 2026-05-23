@@ -30,9 +30,10 @@ export default function Footer() {
             <div className="md:col-span-5">
               <Wordmark href={null} />
               <p className="mt-4 max-w-md text-sm text-muted">
-                Permanent, silicon-level redaction of cameras, microphones, and
-                wireless radios on iPad and Android tablets — for organizations
-                that cannot allow capture or transmission.
+                Permanent, silicon-level removal of cameras, microphones,
+                speakers, Wi-Fi, Bluetooth, and antennas on iPad and Android
+                tablets — for organizations that cannot allow capture or
+                transmission.
               </p>
               <p className="mt-4 font-mono text-[11px] uppercase tracking-[0.14em] text-muted">
                 US-based facility · Background-checked technicians

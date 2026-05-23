@@ -52,6 +52,50 @@ export function RadioIcon(props) {
   );
 }
 
+export function SpeakerIcon(props) {
+  return (
+    <Base {...props}>
+      <path d="M4 7.5h3l4-3v11l-4-3H4z" />
+      <path d="M13.5 8a3 3 0 010 4" />
+      <path d="M3 3l14 14" />
+    </Base>
+  );
+}
+
+export function WifiIcon(props) {
+  return (
+    <Base {...props}>
+      <path d="M2.5 7.5a12 12 0 0115 0" />
+      <path d="M5 10.5a8 8 0 0110 0" />
+      <path d="M7.5 13.5a4 4 0 015 0" />
+      <circle cx="10" cy="16" r="0.8" fill="currentColor" />
+      <path d="M3 3l14 14" />
+    </Base>
+  );
+}
+
+export function BluetoothIcon(props) {
+  return (
+    <Base {...props}>
+      <path d="M7 5l6 5-6 5V5l6 5-6 5" />
+      <path d="M3 3l14 14" />
+    </Base>
+  );
+}
+
+export function AntennaIcon(props) {
+  return (
+    <Base {...props}>
+      <path d="M6.5 7.5l-3 9" />
+      <path d="M13.5 7.5l3 9" />
+      <path d="M10 4v13" />
+      <path d="M5 13h10" />
+      <circle cx="10" cy="4" r="1" fill="currentColor" />
+      <path d="M3 3l14 14" />
+    </Base>
+  );
+}
+
 export function CertIcon(props) {
   return (
     <Base {...props}>

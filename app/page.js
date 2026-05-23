@@ -1,17 +1,22 @@
 import Link from "next/link";
 import Image from "next/image";
 import Reveal from "../components/Reveal";
-import { CameraIcon, MicIcon, RadioIcon, CertIcon, ArrowRightIcon, CheckIcon } from "../components/Icons";
+import {
+  CameraIcon, MicIcon, SpeakerIcon, WifiIcon, BluetoothIcon, AntennaIcon,
+  CertIcon, ArrowRightIcon, CheckIcon,
+} from "../components/Icons";
 
 const capabilities = [
-  { Icon: CameraIcon, title: "Camera Redaction", desc: "Front, rear, and accessory cameras are physically removed. Apertures are sealed and refinished to OEM cosmetics." },
-  { Icon: MicIcon, title: "Microphone Redaction", desc: "Every microphone — primary, secondary, and accessory — severed from the audio bus at the board level." },
-  { Icon: RadioIcon, title: "Radio Redaction", desc: "Wi-Fi, Bluetooth, NFC, GPS, and optional cellular silicon removed. Antenna traces cut." },
-  { Icon: CertIcon, title: "Audit-Ready Documentation", desc: "Per-device serials, before/after photography, and a signed chain-of-custody packet for every unit." },
+  { Icon: CameraIcon,    title: "Cameras",     desc: "Front, rear, and accessory camera modules physically removed. Apertures sealed and refinished to OEM cosmetics." },
+  { Icon: MicIcon,       title: "Microphones", desc: "Primary, secondary, and accessory mics severed from the audio bus at the board level. Verified inert post-removal." },
+  { Icon: SpeakerIcon,   title: "Speakers",    desc: "All speaker drivers removed. Devices remain visually intact and fully usable for touch, display, and approved I/O \u2014 with no audible output." },
+  { Icon: WifiIcon,      title: "Wi-Fi",       desc: "Wi-Fi radio silicon removed and antenna traces cut. Device cannot associate with any 2.4\u202fGHz or 5\u202fGHz network." },
+  { Icon: BluetoothIcon, title: "Bluetooth",   desc: "Bluetooth controller removed and BLE pathways severed. No pairing, no beacons, no covert audio exfiltration." },
+  { Icon: AntennaIcon,   title: "Antennas",    desc: "Cellular (LTE/5G), GPS, and NFC antennas and modems removed. Device cannot connect to carrier networks or be geolocated by RF." },
 ];
 
 const stats = [
-  { n: "100%", l: "Hardware-level redaction" },
+  { n: "6", l: "Components removed at the silicon" },
   { n: "0", l: "Software toggles. Truly irreversible." },
   { n: "48h", l: "Typical turnaround per device" },
   { n: "100%", l: "Devices ship with audit documentation" },
@@ -28,7 +33,7 @@ const faqs = [
   },
   {
     q: "Does the device still function as a tablet?",
-    a: "Yes. Touch, display, speakers, charging, and all non-redacted radios continue to work normally. We document every removed component so your MDM and procurement records stay accurate.",
+    a: "Yes \u2014 with the obvious exceptions of any component you ask us to remove. Touch, display, charging, and approved I/O continue to work. If you redact speakers there is no audio out; if you redact Wi-Fi the device will not associate with networks; and so on. Every removed component is itemized in the unit's Certificate of Redaction.",
   },
   {
     q: "What documentation do we receive?",
@@ -66,15 +71,15 @@ export default function HomePage() {
         </Reveal>
         <Reveal delay={80}>
           <h1 className="mt-6 font-display text-5xl font-medium leading-[1.02] tracking-tightest sm:text-7xl lg:text-[88px]">
-            Camera. Microphone.<br />
-            Radio. <span className="text-accent">Gone.</span>
+            Cameras. Microphones. Speakers.<br />
+            Wi-Fi. Bluetooth. Antennas. <span className="text-accent">Gone.</span>
           </h1>
         </Reveal>
         <Reveal delay={160}>
           <p className="mt-8 max-w-2xl text-lg text-muted sm:text-xl">
             Permanent, silicon-level redaction for iPad and Android tablets.
+            Six components, removed at the board — not toggled in software.
             Built for SCIFs, courtrooms, operating rooms, and cellblocks.
-            No software. No stickers. No second chances.
           </p>
         </Reveal>
         <Reveal delay={240}>
@@ -133,25 +138,32 @@ export default function HomePage() {
       <section className="container-xl py-24">
         <div className="grid gap-12 lg:grid-cols-12">
           <div className="lg:col-span-5">
-            <Reveal><div className="eyebrow">What we do</div></Reveal>
+            <Reveal><div className="eyebrow">What we remove</div></Reveal>
             <Reveal delay={80}>
               <h2 className="mt-6 font-display text-4xl font-medium tracking-tightest sm:text-5xl">
-                Built for environments where <span className="text-accent">software locks aren&rsquo;t enough.</span>
+                Six components. <span className="text-accent">Removed, not disabled.</span>
               </h2>
             </Reveal>
             <Reveal delay={160}>
               <p className="mt-5 text-muted">
                 MDM toggles get bypassed. Tape peels off. Firmware gets patched.
-                Our redactions are performed at the silicon — there is nothing
-                left to disable, jailbreak, or re-enable.
+                Every CBR Labs redaction is performed at the board — there is
+                nothing left to disable, jailbreak, or re-enable.
               </p>
+            </Reveal>
+            <Reveal delay={240}>
+              <div className="mt-8">
+                <Link href="/services" className="btn-ghost px-5 py-2.5 text-[13px]">
+                  See full services <ArrowRightIcon size={16} />
+                </Link>
+              </div>
             </Reveal>
           </div>
 
-          <div className="lg:col-span-7 grid gap-px bg-ink/[0.08] sm:grid-cols-2">
+          <div className="lg:col-span-7 grid gap-px bg-ink/[0.08] sm:grid-cols-2 border hairline">
             {capabilities.map((c, i) => (
-              <Reveal key={c.title} delay={i * 60} className="bg-paper">
-                <div className="h-full p-6 sm:p-8">
+              <Reveal key={c.title} delay={i * 50} className="bg-paper">
+                <div className="h-full p-6 sm:p-7">
                   <c.Icon size={22} className="text-accent" />
                   <h3 className="mt-5 font-display text-lg font-medium tracking-tight">{c.title}</h3>
                   <p className="mt-2 text-sm text-muted">{c.desc}</p>

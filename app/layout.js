@@ -16,7 +16,7 @@ export const metadata = {
     template: "%s — CBR Labs",
   },
   description:
-    "CBR Labs permanently redacts cameras, microphones, and wireless radios from iPad and Android tablets — purpose-built devices for SCIFs, courtrooms, hospitals, and correctional facilities.",
+    "CBR Labs permanently redacts cameras, microphones, speakers, Wi-Fi, Bluetooth, and antennas from iPad and Android tablets — purpose-built devices for SCIFs, courtrooms, hospitals, and correctional facilities.",
   applicationName: "CBR Labs",
   authors: [{ name: "CBR Labs LLC" }],
   keywords: [
