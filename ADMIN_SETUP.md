@@ -1,146 +1,107 @@
-# CBR Labs Admin — one-time Cloudflare setup
+# CBR Labs Admin — go-live checklist
 
-This is what *you* have to do in the Cloudflare dashboard / CLI before the
-admin section at `/admin` will work end-to-end. The code is already in place;
-these steps wire it to real infrastructure.
+You're a one-person company. This is the entire to-do list. ~20 minutes, all in the Cloudflare dashboard at https://dash.cloudflare.com — no terminal, no Wrangler, no local browser.
 
-Estimated time: **20 minutes.**
+Open the dashboard in another tab and walk top to bottom.
 
 ---
 
-## 0. Install Wrangler locally (one time)
+### ☐ 1. Create the database (2 min)
 
-```bash
-npm i -D wrangler
-npx wrangler login    # opens browser, grants this machine access to your CF account
-```
+**Workers & Pages → D1 → Create**
 
-Add to `package.json` scripts (already done if you ran the install above):
+- **Name:** `cbr_labs_admin`
+- After it's created, click into it → **Console** tab
+- Open [db/schema.sql](db/schema.sql) here in VS Code, **Select All**, **Copy**
+- Paste into the D1 console, click **Execute**
 
-```json
-"scripts": {
-  "wrangler": "wrangler",
-  "db:apply":  "wrangler d1 execute cbr-labs-db --remote --file=./db/schema.sql",
-  "db:apply:local": "wrangler d1 execute cbr-labs-db --local --file=./db/schema.sql",
-  "pages:dev": "wrangler pages dev out --d1=DB=cbr-labs-db --r2=FILES=cbr-labs-files"
-}
-```
+Done when you see a green confirmation and the **Tables** tab lists `customers`, `purchase_orders`, `devices`, `device_events`, etc.
 
 ---
 
-## 1. Create the D1 database
+### ☐ 2. Create the photo bucket (1 min)
 
-```bash
-npx wrangler d1 create cbr-labs-db
-```
+**R2 → Create bucket**
 
-Wrangler prints something like:
+- **Name:** `cbr-labs-photos`
+- Location: **Automatic**
+- Leave public access **off**
 
-```
-✅ Successfully created DB 'cbr-labs-db'
-[[d1_databases]]
-binding = "DB"
-database_name = "cbr-labs-db"
-database_id = "abcd1234-...-aaaa"
-```
-
-**Copy that `database_id`** and paste it into `wrangler.toml` over the
-`REPLACE_WITH_D1_ID_FROM_WRANGLER` placeholder.
-
-Apply the schema to the remote database:
-
-```bash
-npm run db:apply
-```
+Done. Nothing else to configure on the bucket.
 
 ---
 
-## 2. Create the R2 bucket
+### ☐ 3. Wire database + bucket + env vars to the site (5 min)
 
-```bash
-npx wrangler r2 bucket create cbr-labs-files
-```
+**Workers & Pages → `cbr-labs` (your Pages project) → Settings**
 
-(Free tier covers 10 GB storage and millions of reads — way more than you'll need.)
+**Bindings → Add binding** (do this twice):
 
----
+| Type        | Variable name | Resource           |
+| ----------- | ------------- | ------------------ |
+| D1 database | `DB`          | `cbr_labs_admin`   |
+| R2 bucket   | `PHOTOS`      | `cbr-labs-photos`  |
 
-## 3. Bind D1 + R2 to the Cloudflare Pages project
+**Variables and Secrets → Add variable** (Production, one row each — paste exactly):
 
-The bindings in `wrangler.toml` work for *local dev*. For the deployed site,
-you also have to attach them on the Pages project once:
+| Name              | Value                                  |
+| ----------------- | -------------------------------------- |
+| `COMPANY_NAME`    | `CBR Labs LLC`                         |
+| `COMPANY_EMAIL`   | `rob@cbr-labs.com`                     |
+| `COMPANY_PHONE`   | `703-623-8835`                         |
+| `COMPANY_ADDRESS` | `5927 Tilbury Rd, Alexandria, VA 22310`|
+| `CAGE_CODE`       | `14Y35`                                |
+| `UEI`             | `K4MZG4KC1MY9`                         |
+| `INVOICE_PREFIX`  | `CBR`                                  |
+| `TAG_YEAR_PREFIX` | `CBR`                                  |
 
-1. Open https://dash.cloudflare.com → **Workers & Pages** → your `cbr-labs` Pages project
-2. Go to **Settings → Functions → Bindings**
-3. **D1 database bindings → Add**: variable name `DB`, database `cbr-labs-db`
-4. **R2 bucket bindings → Add**: variable name `FILES`, bucket `cbr-labs-files`
-5. Click **Save**, then **Deployments → Retry deployment** so the running build
-   picks up the new bindings.
-
-Set environment variables (same screen, **Environment variables → Production**):
-
-| Variable            | Value                                |
-| ------------------- | ------------------------------------ |
-| `COMPANY_NAME`      | `CBR Labs LLC`                       |
-| `COMPANY_EMAIL`     | `sales@cbrlabs.com`                  |
-| `COMPANY_ADDRESS_1` | *(your street address)*              |
-| `COMPANY_ADDRESS_2` | *(city, state, ZIP)*                 |
-| `INVOICE_PREFIX`    | `CBR`                                |
-| `TAG_YEAR_PREFIX`   | `CBR`                                |
+**Deployments → ⋯ on the latest → Retry deployment.** This restart is what makes the new bindings active.
 
 ---
 
-## 4. Lock down `/admin/*` with Cloudflare Access
+### ☐ 4. Lock the door with Cloudflare Access (10 min)
 
-This is the real security. Anyone reaching `/admin/*` or `/api/*` must
-authenticate with an email magic-link or Google account *you* approve.
+**Zero Trust** (left rail). First time, pick any team name like `cbr-labs`.
 
-1. https://dash.cloudflare.com → **Zero Trust** (in the left rail). First time you
-   enter Zero Trust it'll ask you to pick a team name — pick anything, e.g.
-   `cbr-labs`. Free plan covers up to 50 users.
-2. **Access → Applications → Add an application → Self-hosted**
-3. **Application configuration:**
-   - Name: `CBR Labs Admin`
-   - Session duration: `24 hours`
-   - Application domain: `cbr-labs.pages.dev` *(or your custom domain)*
-   - Path: `/admin` (add a second app entry for `/api` with the same policy)
-4. **Identity providers:** enable **One-time PIN** at minimum. Add Google/GitHub
-   if you want SSO.
-5. **Policies → Add a policy:**
-   - Action: **Allow**
-   - Include: **Emails** → list `you@cbrlabs.com` and any technician's email
-6. Save. Repeat steps 2–6 for path `/api` so the underlying data endpoints are
-   also gated.
+**Access → Applications → Add application → Self-hosted**
 
-Test by opening `https://cbr-labs.pages.dev/admin` in a private window — you
-should see Cloudflare's login page, *not* the admin UI.
+- **Name:** `CBR Labs Admin`
+- **Session:** 24 hours
+- **Domain:** `cbr-labs.pages.dev` (or your custom domain)
+- **Path:** `admin`
+- **Identity provider:** turn on **One-time PIN** (it emails you a magic link)
+- **Policies → Add policy → Action: Allow → Include → Emails:** `rob@cbr-labs.com`
+- Save.
 
-When logged in via Access, every request to `/api/*` carries a verified header
-`Cf-Access-Authenticated-User-Email` that the server uses to attribute every
-chain-of-custody event to a real human.
+**Now do it again** — same wizard, same settings, but **Path: `api`**. This locks the data endpoints too.
 
 ---
 
-## 5. Local development
+### ☐ 5. Verify it all works (2 min)
 
-```bash
-npm run build         # produces ./out
-npm run pages:dev     # serves /out at http://localhost:8788, with D1+R2
-```
+Open a private/incognito window:
 
-Local dev does *not* enforce Cloudflare Access. The `accessUser` field in
-`/api/health` will be `null`. That's expected — never expose local dev to the
-internet.
+1. Go to https://cbr-labs.pages.dev/admin
+2. You see Cloudflare's login screen → enter `rob@cbr-labs.com` → check email → click magic link
+3. Admin dashboard loads with KPI tiles (all zeros — that's correct)
+4. Go to **Intake**, create a test customer "Test Co", a PO "PO-TEST", and 1 device with model "iPad Air"
+5. You should land on a success screen with tag `CBR-2026-0001` and a **Print 1 label** button
+6. Click it → PDF downloads → open it → point your iPhone camera at the QR → tap the banner → it walks you through Access and lands on that device's detail page
+
+If all 6 steps pass, you're live.
 
 ---
 
-## 6. Sanity check
+### Already done (you don't need to touch any of this)
 
-After steps 1–4 are done:
+- Marketing site, admin UI, all 11 API endpoints, intake → QR labels → photo upload → chain of custody → state machine
+- Sticker sheets for Avery 22805 (1.5″ device tags, 24/sheet) and Avery 5163 (4×2″ box labels, 10/sheet)
+- PWA manifest + iPhone icons — add admin site to Home Screen for full-screen field use
+- Federal credentials in footer (CAGE 14Y35, UEI K4MZG4KC1MY9, SAM.gov registered)
+- `/neutered-ipad` SEO landing page
 
-- Visit `/api/health` (through Access) → should return
-  `{ ok: true, db: "ok", filesBound: true, accessUser: "you@..." }`
-- Visit `/admin` → green "healthy" dot in the top bar
+---
 
-You're now ready for Phase 2 (intake + devices + QR codes) and Phase 3
-(invoices + receipts + expenses).
+### If anything goes wrong
+
+Re-run the build by pushing any commit (even an empty one) — Pages rebuilds in ~60 seconds. The admin UI shows a useful error message instead of a blank screen if a binding is missing.
