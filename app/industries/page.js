@@ -1,13 +1,15 @@
 import Image from "next/image";
 import Reveal from "../../components/Reveal";
 
-export const metadata = { title: "Industries — CBR Labs LLC" };
+export const metadata = { title: "Industries — CBR Labs" };
 
 const sectors = [
-  { name: "Defense & Government Labs", desc: "SCIFs, sensitive R&D, and secure build rooms where camera and RF discipline is enforced.", icon: "🛡️" },
-  { name: "Corrections", desc: "Inmate education kiosks and tablet programs where imaging and audio capture are prohibited.", icon: "🏛️" },
-  { name: "Healthcare", desc: "Operating rooms, ER bays, and HIPAA‑sensitive areas where ambient capture is not allowed.", icon: "🩺" },
-  { name: "Manufacturing", desc: "Camera‑restricted production lines, trade‑secret zones, and cleanrooms.", icon: "🏭" },
+  { name: "Defense & Intelligence", desc: "SCIFs, SAPFs, sensitive R&D labs, and secure build rooms where optical and RF discipline is mandatory.", icon: "🛡️" },
+  { name: "Corrections", desc: "Inmate education, reentry, and tablet programs where imaging, recording, and live communication are prohibited.", icon: "🏛️" },
+  { name: "Healthcare", desc: "Operating rooms, ER bays, behavioral health units, and HIPAA‑sensitive spaces where ambient capture is not permitted.", icon: "🩺" },
+  { name: "Legal & Judicial", desc: "Courtrooms, jury and grand‑jury chambers, and legal hold workflows where recording devices are strictly forbidden.", icon: "⚖️" },
+  { name: "Manufacturing & IP", desc: "Camera‑restricted production lines, trade‑secret zones, EV and semiconductor cleanrooms, and contract manufacturing floors.", icon: "🏭" },
+  { name: "Education & Testing", desc: "Standardized testing centers, exam rooms, and academic integrity programs requiring sealed, capture‑free devices.", icon: "🎓" },
 ];
 
 export default function Industries() {
@@ -22,7 +24,7 @@ export default function Industries() {
         </Reveal>
         <Reveal delay={160}>
           <p className="mt-5 max-w-2xl text-lg text-slate-600 dark:text-slate-400">
-            We partner with IT, physical security, and compliance leaders to deliver mission‑fit iPads at scale.
+            We partner with IT, physical security, compliance, and procurement leaders to deliver mission‑fit tablets at scale — across both Apple and Android ecosystems.
           </p>
         </Reveal>
       </section>
@@ -31,12 +33,12 @@ export default function Industries() {
         <Reveal>
           <div className="glass-strong overflow-hidden">
             <div className="relative aspect-[16/7]">
-              <Image src="/images/industries.png" alt="Professionals across industries" fill className="object-cover" sizes="100vw" />
+              <Image src="/images/industries.png" alt="Sectors served by CBR Labs" fill className="object-cover" sizes="100vw" />
             </div>
           </div>
         </Reveal>
 
-        <div className="mt-10 grid gap-5 sm:grid-cols-2">
+        <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {sectors.map((s, i) => (
             <Reveal key={s.name} delay={i * 80}>
               <div className="glass h-full p-7 transition hover:-translate-y-1 hover:ring-glow">

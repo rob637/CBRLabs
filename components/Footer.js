@@ -13,11 +13,11 @@ export default function Footer() {
                 </div>
                 <div className="leading-tight">
                   <div className="font-semibold">CBR Labs LLC</div>
-                  <div className="text-xs text-slate-500 dark:text-slate-400">Secure iPad Hardening</div>
+                  <div className="text-xs text-slate-500 dark:text-slate-400">Hardware Redaction</div>
                 </div>
               </div>
               <p className="mt-4 max-w-md text-sm text-slate-600 dark:text-slate-400">
-                Hardware-level modifications for organizations that cannot allow cameras, microphones, or wireless radios in the room.
+                Permanent, silicon-level redaction of cameras, microphones, and wireless radios on iPad and Android tablets — for organizations that cannot allow capture or transmission.
               </p>
             </div>
             <div>
@@ -39,7 +39,7 @@ export default function Footer() {
           </div>
           <div className="mt-10 flex flex-col justify-between gap-3 border-t border-slate-900/5 pt-6 text-xs text-slate-500 dark:border-white/5 dark:text-slate-400 sm:flex-row">
             <div>© {new Date().getFullYear()} CBR Labs LLC. All rights reserved.</div>
-            <div>Apple, iPad, and iOS are trademarks of Apple Inc. CBR Labs LLC is not affiliated with Apple Inc.</div>
+            <div>Apple, iPad, iOS, Samsung, Galaxy, Android, Google, and Pixel are trademarks of their respective owners. CBR Labs LLC is an independent service provider and is not affiliated with any device manufacturer.</div>
           </div>
         </div>
       </div>

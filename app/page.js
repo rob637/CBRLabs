@@ -3,17 +3,17 @@ import Image from "next/image";
 import Reveal from "../components/Reveal";
 
 const capabilities = [
-  { title: "Camera Removal", desc: "Front and rear modules permanently removed and apertures cosmetically finished.", icon: "📷" },
-  { title: "Microphone Elimination", desc: "All audio inputs physically severed from the audio bus.", icon: "🎙️" },
-  { title: "Wireless Disablement", desc: "Wi‑Fi, Bluetooth, and optional cellular radios removed at the silicon.", icon: "📡" },
-  { title: "Audit‑Ready Reports", desc: "Serial‑numbered documentation, photographs, and chain of custody.", icon: "📋" },
+  { title: "Camera Redaction", desc: "Front, rear, and accessory cameras are physically removed. Apertures are sealed and refinished to OEM cosmetics.", icon: "📷" },
+  { title: "Microphone Redaction", desc: "Every microphone — primary, secondary, and accessory — severed from the audio bus at the board level.", icon: "🎙️" },
+  { title: "Radio Redaction", desc: "Wi‑Fi, Bluetooth, NFC, GPS, and optional cellular silicon removed. Antenna traces cut.", icon: "📡" },
+  { title: "Audit‑Ready Documentation", desc: "Per‑device serial records, before/after photography, and a signed chain‑of‑custody packet for every unit.", icon: "📋" },
 ];
 
 const stats = [
-  { n: "100%", l: "Hardware-level removal" },
+  { n: "100%", l: "Hardware‑level redaction" },
   { n: "0", l: "Software toggles. Truly irreversible." },
-  { n: "24h", l: "Typical turnaround per device" },
-  { n: "SOC‑grade", l: "Documentation included" },
+  { n: "48h", l: "Typical turnaround per device" },
+  { n: "SOC‑grade", l: "Documentation with every unit" },
 ];
 
 export default function HomePage() {
@@ -25,25 +25,25 @@ export default function HomePage() {
           <div className="flex justify-center">
             <span className="chip">
               <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
-              Trusted for SCIF, healthcare, and corrections deployments
+              Trusted in SCIFs, courtrooms, hospitals, prisons, and on the factory floor
             </span>
           </div>
         </Reveal>
         <Reveal delay={80}>
           <h1 className="mt-6 text-center font-display text-5xl font-semibold leading-[1.05] tracking-tight sm:text-7xl">
-            iPads, <span className="text-gradient">re‑engineered</span>
+            Tablets, <span className="text-gradient">redacted</span>
             <br />
-            for total privacy.
+            at the silicon.
           </h1>
         </Reveal>
         <Reveal delay={160}>
           <p className="mx-auto mt-6 max-w-2xl text-center text-lg text-slate-600 dark:text-slate-400">
-            CBR Labs permanently removes the cameras, microphones, and wireless radios from genuine Apple iPads — delivering devices that meet the strictest no‑capture, no‑transmit policies.
+            CBR Labs permanently removes the cameras, microphones, and wireless radios from iPad and Android tablets — delivering devices that satisfy the strictest no‑capture, no‑transmit policies. No software. No stickers. No second chances.
           </p>
         </Reveal>
         <Reveal delay={240}>
           <div className="mt-10 flex flex-wrap items-center justify-center gap-3">
-            <Link href="/contact" className="btn-gradient px-6 py-3 text-base">Request Pricing →</Link>
+            <Link href="/contact" className="btn-gradient px-6 py-3 text-base">Request a Quote →</Link>
             <Link href="/services" className="btn-ghost px-6 py-3 text-base">See Capabilities</Link>
           </div>
         </Reveal>
@@ -54,7 +54,7 @@ export default function HomePage() {
               <div className="relative aspect-[16/9] overflow-hidden rounded-2xl">
                 <Image
                   src="/images/home.png"
-                  alt="Modified iPad on a clean workbench"
+                  alt="A redacted tablet on a clean workbench"
                   fill
                   priority
                   className="object-cover"
@@ -92,7 +92,7 @@ export default function HomePage() {
           </Reveal>
           <Reveal delay={160}>
             <p className="mt-4 text-slate-600 dark:text-slate-400">
-              MDM toggles can be bypassed. Tape falls off. Our modifications are silicon‑level — there is nothing left to disable.
+              MDM toggles get bypassed. Tape peels off. Firmware gets patched. Our redactions are performed at the silicon — there is nothing left to disable, jailbreak, or re‑enable.
             </p>
           </Reveal>
         </div>
@@ -115,14 +115,14 @@ export default function HomePage() {
           <div className="glass-strong relative overflow-hidden p-10 text-center sm:p-16">
             <div className="absolute inset-0 -z-10 bg-gradient-to-br from-sky-400/20 via-indigo-500/15 to-fuchsia-500/20" />
             <h2 className="font-display text-3xl font-semibold tracking-tight sm:text-5xl">
-              Have a hardening requirement?
+              Have a redaction requirement?
             </h2>
             <p className="mx-auto mt-4 max-w-xl text-slate-600 dark:text-slate-300">
-              Send us your models, quantities, and timeline. We respond with scope, pricing, and a documented process.
+              Send your models, quantities, and deadline. We respond with scope, pricing, and a documented process — typically within one business day.
             </p>
             <div className="mt-8 flex justify-center gap-3">
-              <Link href="/contact" className="btn-gradient px-6 py-3">Start a project</Link>
-              <Link href="/process" className="btn-ghost px-6 py-3">See our process</Link>
+              <Link href="/contact" className="btn-gradient px-6 py-3">Start a Project</Link>
+              <Link href="/process" className="btn-ghost px-6 py-3">See Our Process</Link>
             </div>
           </div>
         </Reveal>

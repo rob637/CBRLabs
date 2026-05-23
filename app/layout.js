@@ -7,9 +7,9 @@ import BackgroundOrbs from "../components/BackgroundOrbs";
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter", display: "swap" });
 
 export const metadata = {
-  title: "CBR Labs LLC — Secure iPad Hardening",
+  title: "CBR Labs — Hardware Redaction for iPad & Android Tablets",
   description:
-    "CBR Labs permanently removes cameras, microphones, and wireless radios from iPads — purpose-built devices for the world's most security-sensitive environments.",
+    "CBR Labs permanently redacts cameras, microphones, and wireless radios from iPad and Android tablets — purpose-built devices for the world's most security-sensitive environments.",
 };
 
 export const viewport = {

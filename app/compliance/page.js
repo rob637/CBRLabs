@@ -1,13 +1,14 @@
 import Image from "next/image";
 import Reveal from "../../components/Reveal";
 
-export const metadata = { title: "Compliance — CBR Labs LLC" };
+export const metadata = { title: "Compliance — CBR Labs" };
 
 const points = [
-  "Hardware modifications are permanent and will void any manufacturer warranty and AppleCare coverage.",
-  "CBR Labs LLC is not affiliated with Apple Inc. iPad, iOS, and Apple are trademarks of Apple Inc.",
-  "Ensure device configuration meets your organization's policies and applicable laws and regulations.",
-  "Post‑modification, devices may not be eligible for software features that assume cameras, microphones, or radios are present.",
+  "Hardware redactions are permanent and void any remaining manufacturer warranty, including AppleCare and equivalent Android coverage.",
+  "CBR Labs LLC is an independent service provider. We are not affiliated with, authorized, sponsored, or endorsed by Apple Inc., Samsung Electronics, Google LLC, or any device manufacturer. iPad, iOS, Apple, Samsung, Galaxy, Android, Google, and Pixel are trademarks of their respective owners.",
+  "Customers are responsible for ensuring device configuration and end use comply with their organization's policies and all applicable federal, state, and local laws and regulations.",
+  "After redaction, devices may not be eligible for software features that assume the presence of cameras, microphones, GPS, or wireless radios. We document every removed component so your MDM and procurement records stay accurate.",
+  "All work is performed in our US‑based facility by background‑checked technicians. Photographic and serial‑level documentation accompanies every device.",
 ];
 
 export default function Compliance() {
@@ -22,7 +23,7 @@ export default function Compliance() {
         </Reveal>
         <Reveal delay={160}>
           <p className="mt-5 max-w-2xl text-lg text-slate-600 dark:text-slate-400">
-            Plain‑language disclosures for procurement, legal, and risk teams.
+            Plain‑language disclosures for procurement, legal, and risk teams. Written to be read, not skimmed past.
           </p>
         </Reveal>
       </section>
@@ -42,7 +43,7 @@ export default function Compliance() {
         <Reveal>
           <div className="mt-10 glass-strong overflow-hidden">
             <div className="relative aspect-[16/7]">
-              <Image src="/images/compliance.png" alt="Compliance paperwork desk" fill className="object-cover" sizes="100vw" />
+              <Image src="/images/compliance.png" alt="Compliance documentation and audit packet" fill className="object-cover" sizes="100vw" />
             </div>
           </div>
         </Reveal>

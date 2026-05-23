@@ -2,13 +2,13 @@ import Image from "next/image";
 import Link from "next/link";
 import Reveal from "../../components/Reveal";
 
-export const metadata = { title: "Process — CBR Labs LLC" };
+export const metadata = { title: "Process — CBR Labs" };
 
 const steps = [
-  { title: "Scope & Quote", text: "Share models, quantities, and timeline. We confirm parts availability and issue a fixed‑price quote with lead time." },
-  { title: "Chain of Custody", text: "Devices ship under RMA with serial tracking. Optional tamper‑evident seals and dual‑sign receipts." },
-  { title: "Modify & Test", text: "Hardware removal performed in our facility. Cosmetic finishing, functional verification, and photo documentation per unit." },
-  { title: "Return & Support", text: "Devices ship back with serial‑numbered reports and per‑unit certificates. Optional ongoing support and replenishment." },
+  { title: "Scope & Quote", text: "Share models, quantities, and timeline. We confirm parts availability and issue a fixed‑price quote with a guaranteed lead time." },
+  { title: "Chain of Custody", text: "Devices ship under RMA with serial‑level tracking. Optional tamper‑evident seals and dual‑signature receipts for high‑assurance programs." },
+  { title: "Redact & Verify", text: "Hardware redaction performed in our US‑based facility. Cosmetic finishing, functional verification, and per‑unit before/after photography." },
+  { title: "Return & Support", text: "Devices ship back with serial‑numbered Certificates of Redaction and a full audit packet. Optional ongoing replenishment, warranty replacement, and fleet support." },
 ];
 
 export default function Process() {
@@ -23,7 +23,7 @@ export default function Process() {
         </Reveal>
         <Reveal delay={160}>
           <p className="mt-5 max-w-2xl text-lg text-slate-600 dark:text-slate-400">
-            Transparent, documented, and built for compliance and procurement teams.
+            Transparent, documented, and engineered for compliance, procurement, and IT security teams. From single units to fleet rollouts.
           </p>
         </Reveal>
       </section>
@@ -48,7 +48,7 @@ export default function Process() {
         <Reveal>
           <div className="mt-10 glass-strong overflow-hidden">
             <div className="relative aspect-[16/8]">
-              <Image src="/images/process.png" alt="Workflow with tools and devices" fill className="object-cover" sizes="100vw" />
+              <Image src="/images/process.png" alt="CBR Labs redaction workflow" fill className="object-cover" sizes="100vw" />
             </div>
           </div>
         </Reveal>

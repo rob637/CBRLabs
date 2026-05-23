@@ -22,7 +22,7 @@ export default function Navbar() {
             </div>
             <div className="hidden sm:block leading-tight">
               <div className="font-semibold tracking-tight text-sm">CBR Labs</div>
-              <div className="text-[11px] text-slate-500 dark:text-slate-400">Secure iPad Hardening</div>
+              <div className="text-[11px] text-slate-500 dark:text-slate-400">Hardware Redaction</div>
             </div>
           </Link>
 

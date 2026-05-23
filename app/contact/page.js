@@ -1,6 +1,6 @@
 import Reveal from "../../components/Reveal";
 
-export const metadata = { title: "Contact — CBR Labs LLC" };
+export const metadata = { title: "Contact — CBR Labs" };
 
 const inputClass =
   "mt-1 w-full rounded-2xl border border-slate-900/10 bg-white/70 px-4 py-3 text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-400 dark:border-white/10 dark:bg-white/5 dark:text-white dark:placeholder:text-slate-500";
@@ -18,7 +18,7 @@ export default function Contact() {
           </Reveal>
           <Reveal delay={160}>
             <p className="mt-5 text-lg text-slate-600 dark:text-slate-400">
-              Share your models, quantities, and timeline. We'll respond with a scoped proposal — typically within one business day.
+              Tell us the platform (iPad or Android), models, quantities, and deadline. We respond with a scoped, fixed‑price proposal — typically within one business day.
             </p>
           </Reveal>
           <Reveal delay={240}>
@@ -61,11 +61,11 @@ export default function Contact() {
               <textarea
                 name="details"
                 rows={5}
-                placeholder="Models (e.g., A2602), quantities, deadline, special requirements…"
+                placeholder="Platform (iPad / Android), models (e.g., A2602, Galaxy Tab S9), quantities, deadline, deployment environment, special requirements…"
                 className={inputClass}
               />
             </label>
-            <button type="submit" className="btn-gradient mt-2 py-3">Send request →</button>
+            <button type="submit" className="btn-gradient mt-2 py-3">Send Request →</button>
             <p className="text-[11px] text-slate-500 dark:text-slate-400">
               By submitting, you agree we may contact you about this request.
             </p>
