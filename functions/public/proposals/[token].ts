@@ -39,13 +39,22 @@ interface RespondBody { decision: "ACCEPT" | "REJECT"; note?: string; signer_nam
 
 export const onRequestPost: PagesFunction<Env> = async ({ request, env, params }) => handle(async () => {
   const b = await parseJson<RespondBody>(request);
-  if (b.decision !== "ACCEPT" && b.decision !== "REJECT") throw new Error("decision required");
-  const { tok } = await loadByToken(env, String(params.token));
+  if (b.decision !== "ACCEPT" && b.decision !== "REJECT") throw new HttpError(400, "decision required");
+  const { tok, proposal } = await loadByToken(env, String(params.token));
+
+  // Idempotency: if proposal is already ACCEPTED or REJECTED, return current
+  // status without overwriting. Prevents double-submit from changing timestamps
+  // or the signer note.
+  const current = (proposal as { status?: string }).status;
+  if (current === "ACCEPTED" || current === "REJECTED") {
+    return json({ ok: true, status: current, idempotent: true });
+  }
+
   const status = b.decision === "ACCEPT" ? "ACCEPTED" : "REJECTED";
   const note = [b.signer_name && `signed: ${b.signer_name}`, b.note].filter(Boolean).join(" — ");
   await env.DB
     .prepare(`UPDATE proposals SET status = ?1, responded_at = datetime('now'),
-              response_note = ?2 WHERE id = ?3`)
+              response_note = ?2 WHERE id = ?3 AND status NOT IN ('ACCEPTED','REJECTED')`)
     .bind(status, note || null, tok.target_id).run();
   return json({ ok: true, status });
 });

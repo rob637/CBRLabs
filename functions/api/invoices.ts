@@ -1,5 +1,5 @@
 // /api/invoices  — list + create
-import { Env, json, handle, requireActor } from "./_utils";
+import { Env, json, handle, requireActor, paginate } from "./_utils";
 import { mintInvoiceNumber, parseJson } from "./_db";
 
 export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => handle(async () => {
@@ -7,10 +7,12 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => hand
   const url = new URL(request.url);
   const status = url.searchParams.get("status");
   const customerId = url.searchParams.get("customer_id");
+  const { limit, offset } = paginate(url);
   const where: string[] = [];
   const binds: unknown[] = [];
   if (status) { where.push(`i.status = ?${binds.length + 1}`); binds.push(status); }
   if (customerId) { where.push(`i.customer_id = ?${binds.length + 1}`); binds.push(Number(customerId)); }
+  binds.push(limit, offset);
   const sql = `
     SELECT i.*,
            c.name AS customer_name,
@@ -19,11 +21,11 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => hand
     FROM invoices i
     LEFT JOIN customers c ON c.id = i.customer_id
     LEFT JOIN purchase_orders p ON p.id = i.po_id
-    ${where.length ? "WHERE " + where.join(" AND ") : ""}
+    ${where.length ? "WHERE " + where.slice(0, where.length).join(" AND ") : ""}
     ORDER BY i.created_at DESC
-    LIMIT 500`;
+    LIMIT ?${binds.length - 1} OFFSET ?${binds.length}`;
   const rs = await env.DB.prepare(sql).bind(...binds).all();
-  return json({ invoices: rs.results });
+  return json({ invoices: rs.results, limit, offset });
 });
 
 interface CreateBody {

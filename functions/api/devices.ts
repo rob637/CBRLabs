@@ -1,6 +1,6 @@
 // GET  /api/devices                    — list with filters (state, customer_id, po_id, box_tag, q)
 // POST /api/devices                    — bulk intake (mint N tags under a PO/customer)
-import { Env, json, error, handle, requireActor } from "./_utils";
+import { Env, json, error, handle, requireActor, paginate } from "./_utils";
 import { mintDeviceTag, logEvent, parseJson } from "./_db";
 
 export const onRequestGet: PagesFunction<Env> = ({ env, request }) =>
@@ -11,6 +11,7 @@ export const onRequestGet: PagesFunction<Env> = ({ env, request }) =>
     const poId = url.searchParams.get("po_id");
     const boxTag = url.searchParams.get("box_tag");
     const q = url.searchParams.get("q");
+    const { limit, offset } = paginate(url);
 
     const where: string[] = [];
     const binds: unknown[] = [];
@@ -26,6 +27,9 @@ export const onRequestGet: PagesFunction<Env> = ({ env, request }) =>
       binds.push(`%${q}%`, `%${q}%`, `%${q}%`);
       where.push(`(d.tag LIKE ?${binds.length - 2} OR d.serial_number LIKE ?${binds.length - 1} OR d.model LIKE ?${binds.length})`);
     }
+    binds.push(limit, offset);
+    const limitPh = `?${binds.length - 1}`;
+    const offsetPh = `?${binds.length}`;
 
     const sql = `
       SELECT d.id, d.tag, d.box_tag, d.platform, d.model, d.serial_number, d.state,
@@ -37,9 +41,9 @@ export const onRequestGet: PagesFunction<Env> = ({ env, request }) =>
       LEFT JOIN purchase_orders po ON po.id = d.po_id
       ${where.length ? "WHERE " + where.join(" AND ") : ""}
       ORDER BY d.created_at DESC
-      LIMIT 500`;
+      LIMIT ${limitPh} OFFSET ${offsetPh}`;
     const { results } = await env.DB.prepare(sql).bind(...binds).all();
-    return json({ devices: results });
+    return json({ devices: results, limit, offset });
   });
 
 interface IntakeBody {

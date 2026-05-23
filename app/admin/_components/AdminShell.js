@@ -18,6 +18,7 @@ const nav = [
   { href: "/admin/proposals", label: "Proposals" },
   { href: "/admin/leads",     label: "Leads" },
   { href: "/admin/documents", label: "Documents" },
+  { href: "/admin/audit",     label: "Audit log" },
 ];
 
 export default function AdminShell({ children }) {

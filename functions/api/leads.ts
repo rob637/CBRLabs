@@ -1,16 +1,19 @@
 // /api/leads  — admin list of inbound leads (write happens at /public/leads)
-import { Env, json, handle, requireActor } from "./_utils";
+import { Env, json, handle, requireActor, paginate } from "./_utils";
 import { parseJson } from "./_db";
 
 export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => handle(async () => {
   requireActor(request);
   const url = new URL(request.url);
   const status = url.searchParams.get("status");
+  const { limit, offset } = paginate(url);
   const sql = status
-    ? "SELECT * FROM leads WHERE status = ?1 ORDER BY created_at DESC LIMIT 500"
-    : "SELECT * FROM leads ORDER BY created_at DESC LIMIT 500";
-  const rs = status ? await env.DB.prepare(sql).bind(status).all() : await env.DB.prepare(sql).all();
-  return json({ leads: rs.results });
+    ? "SELECT * FROM leads WHERE status = ?1 ORDER BY created_at DESC LIMIT ?2 OFFSET ?3"
+    : "SELECT * FROM leads ORDER BY created_at DESC LIMIT ?1 OFFSET ?2";
+  const rs = status
+    ? await env.DB.prepare(sql).bind(status, limit, offset).all()
+    : await env.DB.prepare(sql).bind(limit, offset).all();
+  return json({ leads: rs.results, limit, offset });
 });
 
 interface PatchBody {

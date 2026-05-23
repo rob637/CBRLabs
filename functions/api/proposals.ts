@@ -1,14 +1,16 @@
 // /api/proposals  — list + create
-import { Env, json, handle, requireActor } from "./_utils";
+import { Env, json, handle, requireActor, paginate } from "./_utils";
 import { mintProposalNumber, parseJson } from "./_db";
 
 export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => handle(async () => {
   requireActor(request);
   const url = new URL(request.url);
   const status = url.searchParams.get("status");
+  const { limit, offset } = paginate(url);
   const where: string[] = [];
   const binds: unknown[] = [];
   if (status) { where.push(`p.status = ?${binds.length + 1}`); binds.push(status); }
+  binds.push(limit, offset);
   const sql = `
     SELECT p.*, c.name AS customer_name, l.name AS lead_name
     FROM proposals p
@@ -16,9 +18,9 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => hand
     LEFT JOIN leads l ON l.id = p.lead_id
     ${where.length ? "WHERE " + where.join(" AND ") : ""}
     ORDER BY p.created_at DESC
-    LIMIT 500`;
+    LIMIT ?${binds.length - 1} OFFSET ?${binds.length}`;
   const rs = await env.DB.prepare(sql).bind(...binds).all();
-  return json({ proposals: rs.results });
+  return json({ proposals: rs.results, limit, offset });
 });
 
 interface CreateBody {

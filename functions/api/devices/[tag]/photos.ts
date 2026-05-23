@@ -3,7 +3,7 @@
 //
 // iPhone-friendly: <input type="file" accept="image/*" capture="environment">
 // posts directly here.
-import { Env, json, error, handle, requireActor } from "../../_utils";
+import { Env, json, error, handle, requireActor, assertPhoto } from "../../_utils";
 import { logEvent } from "../../_db";
 
 const VALID_PHASES = new Set(["INTAKE", "BEFORE", "AFTER", "SHIPPING"]);
@@ -26,6 +26,7 @@ export const onRequestPost: PagesFunction<Env, "tag"> = ({ env, params, request 
 
     if (!(file instanceof File)) return error(400, "file is required");
     if (!VALID_PHASES.has(phase)) return error(400, "invalid phase");
+    assertPhoto(file);
 
     const ext = guessExt(file.name, file.type);
     const ts = Date.now();

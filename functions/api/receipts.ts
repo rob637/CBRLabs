@@ -1,5 +1,5 @@
 // /api/receipts  — list + create payment. Auto-marks invoice PAID when fully covered.
-import { Env, json, handle, requireActor } from "./_utils";
+import { Env, json, handle, requireActor, paginate } from "./_utils";
 import { parseJson } from "./_db";
 
 export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => handle(async () => {
@@ -7,10 +7,12 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => hand
   const url = new URL(request.url);
   const invoiceId = url.searchParams.get("invoice_id");
   const customerId = url.searchParams.get("customer_id");
+  const { limit, offset } = paginate(url);
   const where: string[] = [];
   const binds: unknown[] = [];
   if (invoiceId)  { where.push(`r.invoice_id = ?${binds.length + 1}`);  binds.push(Number(invoiceId)); }
   if (customerId) { where.push(`r.customer_id = ?${binds.length + 1}`); binds.push(Number(customerId)); }
+  binds.push(limit, offset);
   const sql = `
     SELECT r.*, c.name AS customer_name, i.invoice_number, i.total_cents AS invoice_total
     FROM cash_receipts r
@@ -18,9 +20,9 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => hand
     LEFT JOIN invoices  i ON i.id = r.invoice_id
     ${where.length ? "WHERE " + where.join(" AND ") : ""}
     ORDER BY r.received_at DESC, r.id DESC
-    LIMIT 500`;
+    LIMIT ?${binds.length - 1} OFFSET ?${binds.length}`;
   const rs = await env.DB.prepare(sql).bind(...binds).all();
-  return json({ receipts: rs.results });
+  return json({ receipts: rs.results, limit, offset });
 });
 
 interface CreateBody {
