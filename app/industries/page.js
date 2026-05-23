@@ -1,4 +1,3 @@
-import Image from "next/image";
 import Reveal from "../../components/Reveal";
 import { ShieldIcon, BuildingIcon, HospitalIcon, ScaleIcon, FactoryIcon, CapIcon } from "../../components/Icons";
 
@@ -46,16 +45,6 @@ export default function Industries() {
             leaders to deliver mission-fit tablets at scale — across both Apple
             and Android ecosystems.
           </p>
-        </Reveal>
-      </section>
-
-      <section className="container-xl pb-12">
-        <Reveal>
-          <div className="surface overflow-hidden">
-            <div className="relative aspect-[16/7]">
-              <Image src="/images/industries.png" alt="Sectors served by CBR Labs" fill className="object-cover" sizes="100vw" />
-            </div>
-          </div>
         </Reveal>
       </section>
 

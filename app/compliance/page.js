@@ -1,4 +1,3 @@
-import Image from "next/image";
 import Reveal from "../../components/Reveal";
 
 export const metadata = {
@@ -62,14 +61,6 @@ export default function Compliance() {
             </Reveal>
           ))}
         </div>
-
-        <Reveal>
-          <div className="mt-12 surface overflow-hidden">
-            <div className="relative aspect-[16/7]">
-              <Image src="/images/compliance.png" alt="Compliance documentation and audit packet" fill className="object-cover" sizes="100vw" />
-            </div>
-          </div>
-        </Reveal>
       </section>
     </>
   );

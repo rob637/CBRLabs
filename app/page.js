@@ -1,5 +1,4 @@
 import Link from "next/link";
-import Image from "next/image";
 import Reveal from "../components/Reveal";
 import {
   CameraIcon, MicIcon, SpeakerIcon, WifiIcon, BluetoothIcon, AntennaIcon,
@@ -102,22 +101,6 @@ export default function HomePage() {
               <li className="flex items-center gap-2 whitespace-nowrap"><CheckIcon size={14} className="text-accent shrink-0" /> Chain of custody</li>
               <li className="flex items-center gap-2 whitespace-nowrap"><CheckIcon size={14} className="text-accent shrink-0" /> CAGE Code on request</li>
             </ul>
-          </div>
-        </Reveal>
-
-        {/* Hero image */}
-        <Reveal delay={400}>
-          <div className="relative mt-16 surface overflow-hidden p-2">
-            <div className="relative aspect-[16/9] overflow-hidden rounded-xl">
-              <Image
-                src="/images/home.png"
-                alt="A redacted tablet on a clean workbench"
-                fill
-                priority
-                className="object-cover"
-                sizes="(min-width: 1024px) 1024px, 100vw"
-              />
-            </div>
           </div>
         </Reveal>
       </section>

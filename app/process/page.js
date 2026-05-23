@@ -1,4 +1,3 @@
-import Image from "next/image";
 import Link from "next/link";
 import Reveal from "../../components/Reveal";
 import { ArrowRightIcon } from "../../components/Icons";
@@ -49,14 +48,6 @@ export default function Process() {
             </Reveal>
           ))}
         </ol>
-
-        <Reveal>
-          <div className="mt-12 surface overflow-hidden">
-            <div className="relative aspect-[16/8]">
-              <Image src="/images/process.png" alt="CBR Labs redaction workflow" fill className="object-cover" sizes="100vw" />
-            </div>
-          </div>
-        </Reveal>
 
         <Reveal>
           <div className="mt-12 flex justify-center">

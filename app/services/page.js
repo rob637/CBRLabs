@@ -1,4 +1,3 @@
-import Image from "next/image";
 import Link from "next/link";
 import Reveal from "../../components/Reveal";
 import {
@@ -108,14 +107,6 @@ export default function Services() {
                 delivered with every device. Before/after photography and a
                 signed chain-of-custody packet ship with every order.
               </p>
-            </div>
-          </div>
-        </Reveal>
-
-        <Reveal>
-          <div className="mt-12 surface overflow-hidden">
-            <div className="relative aspect-[16/8]">
-              <Image src="/images/services.png" alt="Technician performing hardware redaction on a tablet" fill className="object-cover" sizes="100vw" />
             </div>
           </div>
         </Reveal>
