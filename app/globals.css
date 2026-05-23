@@ -2,88 +2,145 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ============================================================
+   CBR LABS — design tokens
+   Paper-and-ink editorial palette with a single copper accent.
+   ============================================================ */
 :root {
-  --bg: 250 250 252;
-  --fg: 15 23 42;
-  --muted: 71 85 105;
+  --bg: 247 246 242;        /* paper #F7F6F2 */
+  --bg-elev: 255 255 255;   /* card */
+  --fg: 11 14 19;           /* ink #0B0E13 */
+  --muted: 90 95 105;       /* secondary text */
+  --line: 11 14 19;         /* hairline base (used at low alpha) */
+  --accent: 199 107 58;     /* copper #C76B3A */
+  --accent-fg: 255 255 255;
 }
 .dark {
-  --bg: 6 10 22;
-  --fg: 226 232 240;
-  --muted: 148 163 184;
+  --bg: 11 14 19;           /* graphite #0B0E13 */
+  --bg-elev: 18 22 30;
+  --fg: 232 230 225;        /* warm off-white */
+  --muted: 156 161 170;
+  --line: 232 230 225;
+  --accent: 224 133 82;     /* copper light #E08552 */
+  --accent-fg: 11 14 19;
 }
 
-html, body { background-color: rgb(var(--bg)); color: rgb(var(--fg)); }
-body { @apply font-sans antialiased; }
-::selection { background: rgba(99, 102, 241, 0.35); color: inherit; }
+html { color-scheme: light dark; }
+html, body {
+  background-color: rgb(var(--bg));
+  color: rgb(var(--fg));
+}
+body { @apply font-sans antialiased; font-feature-settings: "ss01", "cv11"; }
+
+::selection { background: rgb(var(--accent) / 0.25); color: inherit; }
+
+/* Subtle grid texture — baked into body so no JS component needed. */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -10;
+  pointer-events: none;
+  background-image:
+    linear-gradient(rgb(var(--line) / 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(var(--line) / 0.04) 1px, transparent 1px);
+  background-size: 48px 48px;
+  mask-image: radial-gradient(ellipse at 50% 0%, black 30%, transparent 80%);
+}
 
 @layer components {
-  .container-lg { @apply max-w-6xl mx-auto px-6; }
-  .container-xl { @apply max-w-7xl mx-auto px-6; }
+  .container-lg { @apply max-w-5xl mx-auto px-6; }
+  .container-xl { @apply max-w-6xl mx-auto px-6; }
 
-  .glass {
-    @apply rounded-3xl border backdrop-blur-xl;
-    background: linear-gradient(180deg, rgba(255,255,255,0.65), rgba(255,255,255,0.30));
-    border-color: rgba(15, 23, 42, 0.08);
-    box-shadow: 0 1px 0 rgba(255,255,255,0.85) inset, 0 20px 50px -20px rgba(2,8,23,0.18);
+  .surface {
+    @apply rounded-2xl border;
+    background: rgb(var(--bg-elev));
+    border-color: rgb(var(--line) / 0.10);
   }
-  .dark .glass {
-    background: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02));
-    border-color: rgba(255,255,255,0.10);
-    box-shadow: 0 1px 0 rgba(255,255,255,0.06) inset, 0 30px 60px -20px rgba(0,0,0,0.6);
+  .surface-quiet {
+    @apply rounded-2xl border;
+    background: rgb(var(--bg-elev) / 0.6);
+    border-color: rgb(var(--line) / 0.08);
+    backdrop-filter: blur(10px);
   }
 
-  .glass-strong {
-    @apply rounded-3xl border backdrop-blur-2xl;
-    background: linear-gradient(180deg, rgba(255,255,255,0.85), rgba(255,255,255,0.55));
-    border-color: rgba(15, 23, 42, 0.10);
-    box-shadow: 0 1px 0 rgba(255,255,255,0.9) inset, 0 30px 70px -20px rgba(2,8,23,0.22);
+  .nav-surface {
+    @apply rounded-2xl border;
+    background: rgb(var(--bg) / 0.72);
+    border-color: rgb(var(--line) / 0.08);
+    backdrop-filter: saturate(140%) blur(14px);
+    -webkit-backdrop-filter: saturate(140%) blur(14px);
   }
-  .dark .glass-strong {
-    background: linear-gradient(180deg, rgba(15,23,42,0.7), rgba(15,23,42,0.4));
-    border-color: rgba(255,255,255,0.12);
-    box-shadow: 0 1px 0 rgba(255,255,255,0.08) inset, 0 30px 70px -20px rgba(0,0,0,0.75);
-  }
+
+  .hairline { border-color: rgb(var(--line) / 0.10); }
 
   .btn {
-    @apply inline-flex items-center justify-center gap-2 rounded-full px-5 py-2.5 text-sm font-semibold transition;
-    @apply bg-slate-900 text-white hover:bg-slate-800;
-    @apply dark:bg-white dark:text-slate-900 dark:hover:bg-slate-100;
+    @apply inline-flex items-center justify-center gap-2 rounded-full px-5 py-2.5 text-sm font-medium transition;
   }
+  .btn-primary {
+    @apply btn;
+    background: rgb(var(--fg));
+    color: rgb(var(--bg));
+  }
+  .btn-primary:hover { filter: brightness(1.08); }
+  .btn-accent {
+    @apply btn;
+    background: rgb(var(--accent));
+    color: rgb(var(--accent-fg));
+  }
+  .btn-accent:hover { filter: brightness(1.06); }
   .btn-ghost {
-    @apply inline-flex items-center justify-center gap-2 rounded-full px-5 py-2.5 text-sm font-semibold transition;
-    @apply border border-slate-900/10 text-slate-900 hover:bg-slate-900/[0.04];
-    @apply dark:border-white/15 dark:text-white dark:hover:bg-white/5;
+    @apply btn border;
+    border-color: rgb(var(--line) / 0.15);
+    color: rgb(var(--fg));
   }
-  .btn-gradient {
-    @apply inline-flex items-center justify-center gap-2 rounded-full px-5 py-2.5 text-sm font-semibold text-white transition;
-    background: linear-gradient(135deg, #0ea5e9 0%, #6366f1 50%, #a855f7 100%);
-    box-shadow: 0 10px 30px -10px rgba(99,102,241,0.55), inset 0 1px 0 rgba(255,255,255,0.25);
-  }
-  .btn-gradient:hover { filter: brightness(1.08); }
+  .btn-ghost:hover { background: rgb(var(--line) / 0.04); }
 
   .chip {
-    @apply inline-flex items-center gap-2 rounded-full border border-slate-900/10 bg-white/60 px-3 py-1 text-xs font-medium text-slate-700 backdrop-blur;
-    @apply dark:border-white/10 dark:bg-white/[0.06] dark:text-slate-200;
+    @apply inline-flex items-center gap-2 rounded-full border px-3 py-1 font-mono text-[11px] uppercase tracking-[0.12em];
+    border-color: rgb(var(--line) / 0.15);
+    color: rgb(var(--muted));
+  }
+  .chip-accent {
+    @apply chip;
+    color: rgb(var(--accent));
+    border-color: rgb(var(--accent) / 0.4);
   }
 
-  .text-gradient {
-    background: linear-gradient(135deg, #0ea5e9 0%, #6366f1 45%, #a855f7 90%);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
+  .eyebrow {
+    @apply inline-flex items-center gap-3 font-mono text-[11px] uppercase tracking-[0.16em];
+    color: rgb(var(--muted));
+  }
+  .eyebrow::before {
+    content: "";
+    width: 28px; height: 1px;
+    background: rgb(var(--accent));
   }
 
-  .ring-glow {
-    box-shadow: 0 0 0 1px rgba(99,102,241,0.18), 0 30px 80px -20px rgba(99,102,241,0.35);
+  .marker {
+    @apply inline-flex h-7 w-7 items-center justify-center rounded-full border font-mono text-[11px];
+    border-color: rgb(var(--line) / 0.20);
+    color: rgb(var(--fg));
   }
 
-  .card { @apply glass p-6; }
+  .text-accent { color: rgb(var(--accent)); }
+
+  .rule { height: 1px; background: rgb(var(--line) / 0.10); }
 }
 
-.reveal { opacity: 0; transform: translateY(20px); transition: opacity .8s ease-out, transform .8s ease-out; }
+.reveal { opacity: 0; transform: translateY(16px); transition: opacity .7s ease-out, transform .7s ease-out; }
 .reveal.in { opacity: 1; transform: none; }
+
 @media (prefers-reduced-motion: reduce) {
   .reveal { opacity: 1; transform: none; transition: none; }
-  .animate-float-slow, .animate-float-slower { animation: none !important; }
+  *, *::before, *::after { animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; transition-duration: 0.001ms !important; }
 }
+
+:where(a, button, [role="button"], input, textarea, select):focus-visible {
+  outline: 2px solid rgb(var(--accent));
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+
+.prose-cbr a { color: rgb(var(--accent)); text-underline-offset: 3px; }
+.prose-cbr a:hover { text-decoration: underline; }
