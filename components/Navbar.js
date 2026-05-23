@@ -1,5 +1,6 @@
 "use client";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useState } from "react";
 import ThemeToggle from "./ThemeToggle";
 import Wordmark from "./Wordmark";
@@ -13,7 +14,9 @@ const links = [
 ];
 
 export default function Navbar() {
+  const pathname = usePathname();
   const [open, setOpen] = useState(false);
+  if (pathname?.startsWith("/admin")) return null;
   return (
     <header className="sticky top-0 z-50 px-3 pt-3">
       <span aria-hidden="true" className="nav-scrim" />

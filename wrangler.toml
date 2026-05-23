@@ -1,0 +1,39 @@
+# Cloudflare Pages project configuration.
+# Bindings here are picked up by Pages Functions in /functions
+# and by `wrangler pages dev` for local development.
+
+name = "cbr-labs"
+compatibility_date = "2025-05-01"
+pages_build_output_dir = "out"
+
+# ---------------------------------------------------------------------------
+# D1 database (SQLite at the edge) — single source of truth for admin data.
+# Create with:
+#   wrangler d1 create cbr-labs-db
+# Then paste the database_id printed by the command into the line below.
+# ---------------------------------------------------------------------------
+[[d1_databases]]
+binding = "DB"
+database_name = "cbr-labs-db"
+database_id = "REPLACE_WITH_D1_ID_FROM_WRANGLER"
+
+# ---------------------------------------------------------------------------
+# R2 bucket — receipts, device photos, certs, COI/CAGE docs, audit-packet zips.
+# Create with:
+#   wrangler r2 bucket create cbr-labs-files
+# ---------------------------------------------------------------------------
+[[r2_buckets]]
+binding = "FILES"
+bucket_name = "cbr-labs-files"
+
+# ---------------------------------------------------------------------------
+# Environment variables — non-secret. For secrets (HMAC keys, etc.) use
+# `wrangler pages secret put NAME` or the Cloudflare dashboard.
+# ---------------------------------------------------------------------------
+[vars]
+COMPANY_NAME      = "CBR Labs LLC"
+COMPANY_EMAIL     = "sales@cbrlabs.com"
+COMPANY_ADDRESS_1 = "REPLACE_WITH_ADDRESS_LINE_1"
+COMPANY_ADDRESS_2 = "REPLACE_WITH_CITY_STATE_ZIP"
+INVOICE_PREFIX    = "CBR"
+TAG_YEAR_PREFIX   = "CBR"

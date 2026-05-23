@@ -2,6 +2,7 @@ import "./globals.css";
 import { Inter, Inter_Tight, JetBrains_Mono } from "next/font/google";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
+import HideOnAdmin from "../components/HideOnAdmin";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter", display: "swap" });
 const interTight = Inter_Tight({ subsets: ["latin"], variable: "--font-display", display: "swap" });
@@ -90,7 +91,7 @@ export default function RootLayout({ children }) {
       <body className="min-h-screen flex flex-col">
         <Navbar />
         <main className="relative flex-1">{children}</main>
-        <Footer />
+        <HideOnAdmin><Footer /></HideOnAdmin>
       </body>
     </html>
   );
