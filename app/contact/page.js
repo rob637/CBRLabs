@@ -1,19 +1,77 @@
+import Reveal from "../../components/Reveal";
+
 export const metadata = { title: "Contact — CBR Labs LLC" };
-export default function Contact(){
-  return(<section className="py-12 max-w-2xl">
-    <h1 className="text-3xl font-bold tracking-tight">Get a Quote</h1>
-    <p className="mt-4 text-slate-300">Tell us your models, quantities, and timeline. We’ll reply with scope and pricing.</p>
-    <form action="mailto:sales@cbrlabs.com" method="post" encType="text/plain" className="grid gap-4 mt-6">
-      <input name="name" placeholder="Your name" required className="rounded-2xl p-3 text-black"/>
-      <input name="company" placeholder="Company / Organization" className="rounded-2xl p-3 text-black"/>
-      <input name="email" type="email" placeholder="Work email" required className="rounded-2xl p-3 text-black"/>
-      <input name="phone" type="tel" placeholder="Phone (optional)" className="rounded-2xl p-3 text-black"/>
-      <textarea name="details" placeholder="Models (e.g., A2602), quantities, deadline, and any special requirements…" rows={5} className="rounded-2xl p-3 text-black"></textarea>
-      <button type="submit" className="btn">Send Request</button>
-      <p className="text-xs text-slate-400">By submitting, you agree we may contact you about this request.</p>
-    </form>
-    <div className="mt-10 rounded-2xl overflow-hidden border border-white/10">
-      <img src="/images/contact.png" alt="Office desk with laptop and phone"/>
-    </div>
-  </section>);
+
+const inputClass =
+  "mt-1 w-full rounded-2xl border border-slate-900/10 bg-white/70 px-4 py-3 text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-400 dark:border-white/10 dark:bg-white/5 dark:text-white dark:placeholder:text-slate-500";
+
+export default function Contact() {
+  return (
+    <section className="container-xl pt-16 pb-24">
+      <div className="grid items-start gap-10 lg:grid-cols-2 lg:gap-16">
+        <div>
+          <Reveal><div className="chip">Talk to us</div></Reveal>
+          <Reveal delay={80}>
+            <h1 className="mt-4 font-display text-5xl font-semibold tracking-tight sm:text-6xl">
+              Get a <span className="text-gradient">quote</span>.
+            </h1>
+          </Reveal>
+          <Reveal delay={160}>
+            <p className="mt-5 text-lg text-slate-600 dark:text-slate-400">
+              Share your models, quantities, and timeline. We'll respond with a scoped proposal — typically within one business day.
+            </p>
+          </Reveal>
+          <Reveal delay={240}>
+            <div className="mt-8 glass p-6">
+              <div className="text-xs uppercase tracking-wider text-slate-500 dark:text-slate-400">Direct</div>
+              <div className="mt-2 text-sm">
+                <a href="mailto:sales@cbrlabs.com" className="hover:underline">sales@cbrlabs.com</a>
+              </div>
+            </div>
+          </Reveal>
+        </div>
+
+        <Reveal delay={120}>
+          <form
+            action="mailto:sales@cbrlabs.com"
+            method="post"
+            encType="text/plain"
+            className="glass-strong grid gap-3 p-7"
+          >
+            <label className="text-xs text-slate-600 dark:text-slate-400">
+              Name
+              <input name="name" required placeholder="Your name" className={inputClass} />
+            </label>
+            <label className="text-xs text-slate-600 dark:text-slate-400">
+              Company / Organization
+              <input name="company" placeholder="Company" className={inputClass} />
+            </label>
+            <div className="grid gap-3 sm:grid-cols-2">
+              <label className="text-xs text-slate-600 dark:text-slate-400">
+                Work email
+                <input name="email" type="email" required placeholder="you@org.com" className={inputClass} />
+              </label>
+              <label className="text-xs text-slate-600 dark:text-slate-400">
+                Phone (optional)
+                <input name="phone" type="tel" placeholder="(555) 555‑5555" className={inputClass} />
+              </label>
+            </div>
+            <label className="text-xs text-slate-600 dark:text-slate-400">
+              Project details
+              <textarea
+                name="details"
+                rows={5}
+                placeholder="Models (e.g., A2602), quantities, deadline, special requirements…"
+                className={inputClass}
+              />
+            </label>
+            <button type="submit" className="btn-gradient mt-2 py-3">Send request →</button>
+            <p className="text-[11px] text-slate-500 dark:text-slate-400">
+              By submitting, you agree we may contact you about this request.
+            </p>
+          </form>
+        </Reveal>
+      </div>
+    </section>
+  );
 }
