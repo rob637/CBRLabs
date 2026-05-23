@@ -1,7 +1,7 @@
 const SITE = "https://cbr-labs.com";
 
 export default function sitemap() {
-  const routes = ["", "/services", "/industries", "/process", "/about", "/resources", "/compliance", "/contact"];
+  const routes = ["", "/services", "/industries", "/process", "/about", "/resources", "/compliance", "/contact", "/neutered-ipad"];
   return routes.map((r) => ({
     url: `${SITE}${r}`,
     lastModified: new Date(),

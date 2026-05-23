@@ -5,8 +5,11 @@ export interface Env {
   FILES: R2Bucket;
   COMPANY_NAME: string;
   COMPANY_EMAIL: string;
+  COMPANY_PHONE: string;
   COMPANY_ADDRESS_1: string;
   COMPANY_ADDRESS_2: string;
+  COMPANY_CAGE: string;
+  COMPANY_UEI: string;
   INVOICE_PREFIX: string;
   TAG_YEAR_PREFIX: string;
 }

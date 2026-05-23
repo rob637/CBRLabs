@@ -100,8 +100,38 @@ export default function HomePage() {
               <li className="flex items-center gap-2 whitespace-nowrap"><CheckIcon size={14} className="text-accent shrink-0" /> US-based facility</li>
               <li className="flex items-center gap-2 whitespace-nowrap"><CheckIcon size={14} className="text-accent shrink-0" /> Background-checked</li>
               <li className="flex items-center gap-2 whitespace-nowrap"><CheckIcon size={14} className="text-accent shrink-0" /> Chain of custody</li>
-              <li className="flex items-center gap-2 whitespace-nowrap"><CheckIcon size={14} className="text-accent shrink-0" /> CAGE Code on request</li>
+              <li className="flex items-center gap-2 whitespace-nowrap"><CheckIcon size={14} className="text-accent shrink-0" /> SAM.gov · CAGE 14Y35</li>
             </ul>
+          </div>
+        </Reveal>
+      </section>
+
+      {/* FEDERAL CREDENTIALS — visible above the fold for gov buyers */}
+      <section className="container-xl pb-12">
+        <Reveal>
+          <div className="surface overflow-hidden">
+            <div className="grid items-center gap-px bg-ink/[0.08] sm:grid-cols-4">
+              <div className="bg-paper p-5 sm:p-6">
+                <div className="font-mono text-[10px] uppercase tracking-[0.18em] text-muted">SAM.gov</div>
+                <div className="mt-2 font-display text-base font-medium tracking-tight">Active registration</div>
+                <div className="mt-1 text-xs text-muted">Ready for federal contracting</div>
+              </div>
+              <div className="bg-paper p-5 sm:p-6">
+                <div className="font-mono text-[10px] uppercase tracking-[0.18em] text-muted">CAGE Code</div>
+                <div className="mt-2 font-display text-base font-medium tracking-tight">14Y35</div>
+                <div className="mt-1 text-xs text-muted">Commercial &amp; Government Entity</div>
+              </div>
+              <div className="bg-paper p-5 sm:p-6">
+                <div className="font-mono text-[10px] uppercase tracking-[0.18em] text-muted">UEI</div>
+                <div className="mt-2 font-display text-base font-medium tracking-tight break-all">K4MZG4KC1MY9</div>
+                <div className="mt-1 text-xs text-muted">Unique Entity ID</div>
+              </div>
+              <div className="bg-paper p-5 sm:p-6">
+                <div className="font-mono text-[10px] uppercase tracking-[0.18em] text-muted">DUNS</div>
+                <div className="mt-2 font-display text-base font-medium tracking-tight">144834451</div>
+                <div className="mt-1 text-xs text-muted">D&amp;B identifier</div>
+              </div>
+            </div>
           </div>
         </Reveal>
       </section>

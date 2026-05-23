@@ -67,7 +67,21 @@ const orgJsonLd = {
   name: "CBR Labs LLC",
   url: SITE_URL,
   logo: `${SITE_URL}/og.png`,
-  email: "sales@cbrlabs.com",
+  email: "rob@cbr-labs.com",
+  telephone: "+1-703-623-8835",
+  address: {
+    "@type": "PostalAddress",
+    streetAddress: "5927 Tilbury Road",
+    addressLocality: "Alexandria",
+    addressRegion: "VA",
+    postalCode: "22310",
+    addressCountry: "US",
+  },
+  identifier: [
+    { "@type": "PropertyValue", propertyID: "CAGE", value: "14Y35" },
+    { "@type": "PropertyValue", propertyID: "UEI",  value: "K4MZG4KC1MY9" },
+    { "@type": "PropertyValue", propertyID: "DUNS", value: "144834451" },
+  ],
   description:
     "Hardware redaction services — permanent removal of cameras, microphones, and wireless radios from iPad and Android tablets.",
   areaServed: "US",
