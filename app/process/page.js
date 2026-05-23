@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import Reveal from "../../components/Reveal";
 import { ArrowRightIcon } from "../../components/Icons";
 
@@ -31,6 +32,21 @@ export default function Process() {
             Transparent, documented, and engineered for compliance, procurement,
             and IT security teams. From single units to fleet rollouts.
           </p>
+        </Reveal>
+      </section>
+
+      <section className="container-xl pb-12">
+        <Reveal>
+          <figure className="brand-figure aspect-[16/9] sm:aspect-[21/9]">
+            <Image
+              src="/images/process.jpg"
+              alt="A technician working in a clean, instrumented lab environment."
+              fill
+              sizes="(min-width: 1024px) 1024px, 100vw"
+              className="object-cover"
+            />
+            <figcaption className="brand-figure-caption">Inside the lab · Serial-level tracking</figcaption>
+          </figure>
         </Reveal>
       </section>
 

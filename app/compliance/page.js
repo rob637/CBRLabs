@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Reveal from "../../components/Reveal";
 
 export const metadata = {
@@ -34,18 +35,34 @@ export default function Compliance() {
   return (
     <>
       <section className="container-xl pt-20 pb-12">
-        <Reveal><div className="eyebrow">Disclosures</div></Reveal>
-        <Reveal delay={80}>
-          <h1 className="mt-6 font-display text-5xl font-medium tracking-tightest sm:text-7xl">
-            Compliance & <span className="text-accent">disclaimers</span>
-          </h1>
-        </Reveal>
-        <Reveal delay={160}>
-          <p className="mt-6 max-w-2xl text-lg text-muted">
-            Plain-language disclosures for procurement, legal, and risk teams.
-            Written to be read, not skimmed past.
-          </p>
-        </Reveal>
+        <div className="grid items-end gap-10 lg:grid-cols-12">
+          <div className="lg:col-span-7">
+            <Reveal><div className="eyebrow">Disclosures</div></Reveal>
+            <Reveal delay={80}>
+              <h1 className="mt-6 font-display text-5xl font-medium tracking-tightest sm:text-7xl">
+                Compliance & <span className="text-accent">disclaimers</span>
+              </h1>
+            </Reveal>
+            <Reveal delay={160}>
+              <p className="mt-6 max-w-2xl text-lg text-muted">
+                Plain-language disclosures for procurement, legal, and risk teams.
+                Written to be read, not skimmed past.
+              </p>
+            </Reveal>
+          </div>
+          <Reveal delay={200} className="lg:col-span-5">
+            <figure className="brand-figure aspect-[4/5] lg:aspect-[4/5]">
+              <Image
+                src="/images/compliance.jpg"
+                alt="Hands signing a document — chain-of-custody and disclosure paperwork accompany every order."
+                fill
+                sizes="(min-width: 1024px) 480px, 100vw"
+                className="object-cover"
+              />
+              <figcaption className="brand-figure-caption">Documented · Disclosed</figcaption>
+            </figure>
+          </Reveal>
+        </div>
       </section>
 
       <section className="container-xl pb-20">

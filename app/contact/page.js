@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Reveal from "../../components/Reveal";
 import { ArrowRightIcon } from "../../components/Icons";
 
@@ -13,8 +14,24 @@ const inputClass =
 
 export default function Contact() {
   return (
-    <section className="container-xl pt-20 pb-24">
-      <div className="grid items-start gap-12 lg:grid-cols-12">
+    <>
+      <section className="container-xl pt-16 pb-10">
+        <Reveal>
+          <figure className="brand-figure aspect-[21/8] sm:aspect-[21/7]">
+            <Image
+              src="/images/contact.jpg"
+              alt="CBR Labs facility corridor — quiet, controlled, and secured."
+              fill
+              sizes="(min-width: 1024px) 1024px, 100vw"
+              className="object-cover"
+            />
+            <figcaption className="brand-figure-caption">US-based facility</figcaption>
+          </figure>
+        </Reveal>
+      </section>
+
+      <section className="container-xl pb-24">
+        <div className="grid items-start gap-12 lg:grid-cols-12">
         <div className="lg:col-span-5">
           <Reveal><div className="eyebrow">Talk to us</div></Reveal>
           <Reveal delay={80}>
@@ -91,5 +108,6 @@ export default function Contact() {
         </Reveal>
       </div>
     </section>
+    </>
   );
 }

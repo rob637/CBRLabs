@@ -144,6 +144,32 @@ body::before {
   .text-accent { color: rgb(var(--accent)); }
 
   .rule { height: 1px; background: rgb(var(--line) / 0.10); }
+
+  /* Editorial photo treatment — subtle desaturation + warm vignette
+     so any stock-or-real photo reads as part of the paper/ink/copper
+     system instead of fighting it. */
+  .brand-figure {
+    @apply relative overflow-hidden rounded-2xl border;
+    border-color: rgb(var(--line) / 0.10);
+    background: rgb(var(--bg-elev));
+  }
+  .brand-figure > img,
+  .brand-figure span > img {
+    filter: saturate(0.72) contrast(1.04);
+  }
+  .brand-figure::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background:
+      linear-gradient(180deg, rgb(11 14 19 / 0) 55%, rgb(11 14 19 / 0.18) 100%),
+      linear-gradient(120deg, rgb(199 107 58 / 0.05), rgb(11 14 19 / 0));
+  }
+  .brand-figure-caption {
+    @apply absolute left-4 bottom-4 z-10 font-mono text-[10px] uppercase tracking-[0.16em] text-paper/90;
+    text-shadow: 0 1px 2px rgb(11 14 19 / 0.4);
+  }
 }
 
 .reveal { opacity: 0; transform: translateY(16px); transition: opacity .7s ease-out, transform .7s ease-out; }

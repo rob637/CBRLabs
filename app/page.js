@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import Reveal from "../components/Reveal";
 import {
   CameraIcon, MicIcon, SpeakerIcon, WifiIcon, BluetoothIcon, AntennaIcon,
@@ -102,6 +103,23 @@ export default function HomePage() {
               <li className="flex items-center gap-2 whitespace-nowrap"><CheckIcon size={14} className="text-accent shrink-0" /> CAGE Code on request</li>
             </ul>
           </div>
+        </Reveal>
+      </section>
+
+      {/* HERO FIGURE */}
+      <section className="container-xl pb-16 sm:pb-20">
+        <Reveal>
+          <figure className="brand-figure aspect-[16/9] sm:aspect-[21/9]">
+            <Image
+              src="/images/home.jpg"
+              alt="Macro view of a circuit board, the level at which CBR Labs performs hardware redaction."
+              fill
+              priority
+              sizes="(min-width: 1024px) 1024px, 100vw"
+              className="object-cover"
+            />
+            <figcaption className="brand-figure-caption">Board-level work · US facility</figcaption>
+          </figure>
         </Reveal>
       </section>
 

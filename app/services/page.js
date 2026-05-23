@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import Reveal from "../../components/Reveal";
 import {
   CameraIcon, MicIcon, SpeakerIcon, WifiIcon, BluetoothIcon, AntennaIcon,
@@ -49,21 +50,37 @@ export default function Services() {
   return (
     <>
       <section className="container-xl pt-20 pb-12">
-        <Reveal><div className="eyebrow">Capabilities</div></Reveal>
-        <Reveal delay={80}>
-          <h1 className="mt-6 font-display text-5xl font-medium tracking-tightest sm:text-7xl">
-            Six redactions.<br />
-            <span className="text-accent">All permanent.</span>
-          </h1>
-        </Reveal>
-        <Reveal delay={160}>
-          <p className="mt-6 max-w-2xl text-lg text-muted">
-            Every redaction is performed at the hardware level so the function
-            cannot be re-enabled by software update, firmware reflash, jailbreak,
-            or supply-chain manipulation. We service Apple iPad and leading
-            Android tablets — including Samsung Galaxy Tab and Google Pixel Tablet.
-          </p>
-        </Reveal>
+        <div className="grid items-end gap-10 lg:grid-cols-12">
+          <div className="lg:col-span-7">
+            <Reveal><div className="eyebrow">Capabilities</div></Reveal>
+            <Reveal delay={80}>
+              <h1 className="mt-6 font-display text-5xl font-medium tracking-tightest sm:text-7xl">
+                Six redactions.<br />
+                <span className="text-accent">All permanent.</span>
+              </h1>
+            </Reveal>
+            <Reveal delay={160}>
+              <p className="mt-6 max-w-2xl text-lg text-muted">
+                Every redaction is performed at the hardware level so the function
+                cannot be re-enabled by software update, firmware reflash, jailbreak,
+                or supply-chain manipulation. We service Apple iPad and leading
+                Android tablets — including Samsung Galaxy Tab and Google Pixel Tablet.
+              </p>
+            </Reveal>
+          </div>
+          <Reveal delay={200} className="lg:col-span-5">
+            <figure className="brand-figure aspect-[4/5] sm:aspect-[5/6] lg:aspect-[4/5]">
+              <Image
+                src="/images/services.jpg"
+                alt="A tablet device on a clean workbench — the form factor CBR Labs redacts."
+                fill
+                sizes="(min-width: 1024px) 480px, 100vw"
+                className="object-cover"
+              />
+              <figcaption className="brand-figure-caption">Tablet redaction · iPad &amp; Android</figcaption>
+            </figure>
+          </Reveal>
+        </div>
       </section>
 
       <section className="container-xl pb-20">

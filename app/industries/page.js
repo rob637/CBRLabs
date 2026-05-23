@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Reveal from "../../components/Reveal";
 import { ShieldIcon, BuildingIcon, HospitalIcon, ScaleIcon, FactoryIcon, CapIcon } from "../../components/Icons";
 
@@ -33,19 +34,35 @@ export default function Industries() {
   return (
     <>
       <section className="container-xl pt-20 pb-12">
-        <Reveal><div className="eyebrow">Who we serve</div></Reveal>
-        <Reveal delay={80}>
-          <h1 className="mt-6 font-display text-5xl font-medium tracking-tightest sm:text-7xl">
-            When the policy says <span className="text-accent">&ldquo;no cameras allowed.&rdquo;</span>
-          </h1>
-        </Reveal>
-        <Reveal delay={160}>
-          <p className="mt-6 max-w-2xl text-lg text-muted">
-            We partner with IT, physical security, compliance, and procurement
-            leaders to deliver mission-fit tablets at scale — across both Apple
-            and Android ecosystems.
-          </p>
-        </Reveal>
+        <div className="grid items-end gap-10 lg:grid-cols-12">
+          <div className="lg:col-span-7">
+            <Reveal><div className="eyebrow">Who we serve</div></Reveal>
+            <Reveal delay={80}>
+              <h1 className="mt-6 font-display text-5xl font-medium tracking-tightest sm:text-7xl">
+                When the policy says <span className="text-accent">&ldquo;no cameras allowed.&rdquo;</span>
+              </h1>
+            </Reveal>
+            <Reveal delay={160}>
+              <p className="mt-6 max-w-2xl text-lg text-muted">
+                We partner with IT, physical security, compliance, and procurement
+                leaders to deliver mission-fit tablets at scale — across both Apple
+                and Android ecosystems.
+              </p>
+            </Reveal>
+          </div>
+          <Reveal delay={200} className="lg:col-span-5">
+            <figure className="brand-figure aspect-[4/5] lg:aspect-[4/5]">
+              <Image
+                src="/images/industries.jpg"
+                alt="Statue of Lady Justice — a visual stand-in for the regulated environments CBR Labs serves."
+                fill
+                sizes="(min-width: 1024px) 480px, 100vw"
+                className="object-cover"
+              />
+              <figcaption className="brand-figure-caption">Regulated environments</figcaption>
+            </figure>
+          </Reveal>
+        </div>
       </section>
 
       <section className="container-xl pb-24">
