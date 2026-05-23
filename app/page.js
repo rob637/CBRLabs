@@ -95,12 +95,12 @@ export default function HomePage() {
 
         {/* Trust strip */}
         <Reveal delay={320}>
-          <div className="mt-14 surface px-6 py-4">
-            <ul className="grid grid-cols-2 gap-3 font-mono text-[11px] uppercase tracking-[0.12em] text-muted md:grid-cols-4">
-              <li className="flex items-center gap-2"><CheckIcon size={14} className="text-accent" /> US-based facility</li>
-              <li className="flex items-center gap-2"><CheckIcon size={14} className="text-accent" /> Background-checked techs</li>
-              <li className="flex items-center gap-2"><CheckIcon size={14} className="text-accent" /> Serial-level chain of custody</li>
-              <li className="flex items-center gap-2"><CheckIcon size={14} className="text-accent" /> CAGE Code on request</li>
+          <div className="mt-14 surface px-5 py-4 sm:px-6">
+            <ul className="grid grid-cols-2 gap-x-4 gap-y-3 font-mono text-[11px] uppercase tracking-[0.12em] text-muted md:grid-cols-4">
+              <li className="flex items-center gap-2 whitespace-nowrap"><CheckIcon size={14} className="text-accent shrink-0" /> US-based facility</li>
+              <li className="flex items-center gap-2 whitespace-nowrap"><CheckIcon size={14} className="text-accent shrink-0" /> Background-checked</li>
+              <li className="flex items-center gap-2 whitespace-nowrap"><CheckIcon size={14} className="text-accent shrink-0" /> Chain of custody</li>
+              <li className="flex items-center gap-2 whitespace-nowrap"><CheckIcon size={14} className="text-accent shrink-0" /> CAGE Code on request</li>
             </ul>
           </div>
         </Reveal>
@@ -124,13 +124,18 @@ export default function HomePage() {
 
       {/* STATS */}
       <section className="container-xl pb-20">
-        <div className="grid grid-cols-2 md:grid-cols-4 hairline border-t">
-          {stats.map((s) => (
-            <div key={s.l} className="border-b border-r last:border-r-0 hairline p-6 sm:p-8">
-              <div className="font-display text-4xl font-medium tracking-tightest sm:text-5xl">{s.n}</div>
-              <div className="mt-2 font-mono text-[11px] uppercase tracking-[0.12em] text-muted">{s.l}</div>
-            </div>
-          ))}
+        <div className="surface overflow-hidden">
+          <div className="grid grid-cols-2 md:grid-cols-4">
+            {stats.map((s, i) => (
+              <div
+                key={s.l}
+                className={`p-6 sm:p-8 hairline ${i < stats.length - 1 ? "border-r" : ""} ${i < 2 ? "border-b md:border-b-0" : ""}`}
+              >
+                <div className="font-display text-4xl font-medium tracking-tightest sm:text-5xl">{s.n}</div>
+                <div className="mt-2 font-mono text-[11px] uppercase tracking-[0.12em] text-muted">{s.l}</div>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 
@@ -186,12 +191,12 @@ export default function HomePage() {
         <div className="mt-10 divide-y hairline border-t border-b">
           {faqs.map((f, i) => (
             <Reveal key={i} delay={i * 40}>
-              <details className="group py-6">
+              <details className="group py-5">
                 <summary className="flex cursor-pointer items-baseline justify-between gap-6 list-none">
                   <span className="font-display text-lg font-medium tracking-tight sm:text-xl">{f.q}</span>
                   <span className="font-mono text-xs text-muted shrink-0 group-open:rotate-45 transition">+</span>
                 </summary>
-                <p className="mt-4 max-w-3xl text-muted">{f.a}</p>
+                <p className="mt-3 max-w-2xl text-muted">{f.a}</p>
               </details>
             </Reveal>
           ))}

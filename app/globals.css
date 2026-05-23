@@ -66,10 +66,28 @@ body::before {
 
   .nav-surface {
     @apply rounded-2xl border;
-    background: rgb(var(--bg) / 0.72);
+    background: rgb(var(--bg-elev) / 0.88);
     border-color: rgb(var(--line) / 0.08);
-    backdrop-filter: saturate(140%) blur(14px);
-    -webkit-backdrop-filter: saturate(140%) blur(14px);
+    backdrop-filter: saturate(160%) blur(18px);
+    -webkit-backdrop-filter: saturate(160%) blur(18px);
+  }
+
+  /* Full-width scrim behind the sticky header so page content
+     fades into the paper instead of bleeding past the nav pill. */
+  .nav-scrim {
+    position: absolute;
+    inset: 0 0 auto 0;
+    height: 100%;
+    pointer-events: none;
+    z-index: -1;
+    background: linear-gradient(
+      to bottom,
+      rgb(var(--bg) / 0.95) 0%,
+      rgb(var(--bg) / 0.75) 60%,
+      rgb(var(--bg) / 0) 100%
+    );
+    -webkit-mask-image: linear-gradient(to bottom, black 60%, transparent 100%);
+            mask-image: linear-gradient(to bottom, black 60%, transparent 100%);
   }
 
   .hairline { border-color: rgb(var(--line) / 0.10); }

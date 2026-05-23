@@ -16,6 +16,7 @@ export default function Navbar() {
   const [open, setOpen] = useState(false);
   return (
     <header className="sticky top-0 z-50 px-3 pt-3">
+      <span aria-hidden="true" className="nav-scrim" />
       <div className="container-xl">
         <div className="nav-surface flex items-center justify-between gap-4 px-4 py-2.5">
           <div onClick={() => setOpen(false)}>

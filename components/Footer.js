@@ -59,14 +59,16 @@ export default function Footer() {
           </div>
 
           <div className="rule mt-10" />
-          <div className="mt-6 flex flex-col justify-between gap-3 font-mono text-[10px] uppercase tracking-[0.14em] text-muted sm:flex-row">
-            <div>© {new Date().getFullYear()} CBR Labs LLC · All rights reserved</div>
-            <div className="max-w-xl sm:text-right normal-case tracking-normal text-[11px]">
+          <div className="mt-6 grid gap-4 lg:grid-cols-2 lg:items-start">
+            <div className="font-mono text-[10px] uppercase tracking-[0.14em] text-muted">
+              © {new Date().getFullYear()} CBR Labs LLC · All rights reserved
+            </div>
+            <p className="text-[11px] leading-relaxed text-muted lg:text-right">
               Apple, iPad, iOS, Samsung, Galaxy, Android, Google, and Pixel are
               trademarks of their respective owners. CBR Labs LLC is an
               independent service provider and is not affiliated with any device
               manufacturer.
-            </div>
+            </p>
           </div>
         </div>
       </div>
