@@ -300,7 +300,8 @@ function CertButton({ tag, state }) {
     setBusy(true);
     try {
       const d = await api.get(`/api/devices/${encodeURIComponent(tag)}/cert`);
-      const verifyUrl = `${window.location.origin}/admin/devices/view?tag=${encodeURIComponent(tag)}`;
+      const verifyRef = d.device?.cert_number || d.device?.cert_serial || tag;
+      const verifyUrl = `${window.location.origin}/v?cert=${encodeURIComponent(verifyRef)}`;
       const doc = await buildCertPDF({
         device: d.device,
         customer: d.customer,

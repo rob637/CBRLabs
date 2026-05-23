@@ -6,6 +6,7 @@ import { useSearchParams } from "next/navigation";
 import { api, formatDate, formatMoney } from "../../_components/api";
 import PageHeader from "../../_components/PageHeader";
 import StateChip from "../../_components/StateChip";
+import { buildPackingSlipPDF, downloadDoc } from "../../_components/BrandedPDF";
 
 const PO_STATUSES = ["OPEN","IN_PROGRESS","READY_TO_INVOICE","INVOICED","PAID","CANCELLED"];
 
@@ -45,6 +46,20 @@ function POView() {
 
   const po = data.purchase_order;
 
+  async function printPackingSlip() {
+    try {
+      const doc = await buildPackingSlipPDF({
+        po,
+        customer: { name: po.customer_name, contact_name: po.customer_contact, email: po.customer_email },
+        devices: data.devices,
+        siteOrigin: window.location.origin,
+      });
+      downloadDoc(doc, `packing-slip-${po.po_number || po.id}.pdf`);
+    } catch (e) {
+      alert(e.message);
+    }
+  }
+
   return (
     <div>
       <PageHeader
@@ -60,6 +75,7 @@ function POView() {
         }
         actions={
           <>
+            <button onClick={printPackingSlip} disabled={!data.devices.length} className="btn-ghost">Packing slip</button>
             <Link href={`/admin/intake?po_id=${po.id}`} className="btn-accent">+ Add devices</Link>
             <Link href="/admin/pos" className="btn-ghost">← All POs</Link>
           </>

@@ -5,12 +5,17 @@ const nav = {
   Services: [
     ["iPad redaction", "/services"],
     ["Android tablet redaction", "/services"],
+    ["Pricing", "/pricing"],
+    ["Security & custody", "/security"],
     ["Process", "/process"],
     ["Compliance", "/compliance"],
   ],
   Company: [
     ["About", "/about"],
     ["Industries", "/industries"],
+    ["Government", "/government"],
+    ["Case studies", "/case-studies"],
+    ["FAQ", "/faq"],
     ["Resources", "/resources"],
     ["Contact", "/contact"],
   ],

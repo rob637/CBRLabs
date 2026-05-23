@@ -428,3 +428,113 @@ export async function buildCertPDF({ device, customer, redactions, events, verif
   brandedFooter(doc, { confidential: false });
   return doc;
 }
+
+/**
+ * Packing slip for a PO shipment. Lists every device with its tag, model,
+ * serial, state, and a small per-device QR linking to the public verify page.
+ * `siteOrigin` is required to embed scannable cert verify URLs.
+ */
+export async function buildPackingSlipPDF({ po, customer, devices, siteOrigin }) {
+  const { doc, W, M, y: y0 } = newBrandedDoc({
+    docKind: "Packing slip",
+    docNumber: po.po_number || `#${po.id}`,
+  });
+  let y = y0;
+
+  // Ship-to + meta
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(8);
+  doc.setTextColor(...MUTED);
+  doc.text("SHIP TO", M, y);
+  doc.setFont("helvetica", "normal");
+  doc.setFontSize(10);
+  doc.setTextColor(...INK);
+  doc.text(customer?.name || "—", M, y + 0.22);
+  if (customer?.contact_name) doc.text(customer.contact_name, M, y + 0.4);
+  if (customer?.email)        doc.text(customer.email, M, y + 0.56);
+
+  metaBlock(doc, [
+    { label: "PO",           value: po.po_number || `#${po.id}` },
+    { label: "Status",       value: po.status || "—" },
+    { label: "Devices",      value: String(devices.length) },
+    { label: "Packed",       value: new Date().toISOString().slice(0, 10) },
+  ], { x: W - M - 2.2, y, w: 2.2 });
+
+  y += 1.0;
+
+  // Table header
+  const colTag    = M;
+  const colModel  = M + 1.2;
+  const colSerial = M + 3.2;
+  const colState  = W - M - 1.6;
+  const colQR     = W - M - 0.5;
+
+  doc.setFillColor(245, 244, 240);
+  doc.rect(M, y, W - M * 2, 0.32, "F");
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(8);
+  doc.setTextColor(...MUTED);
+  doc.text("TAG",    colTag + 0.1, y + 0.21);
+  doc.text("MODEL",  colModel,     y + 0.21);
+  doc.text("SERIAL", colSerial,    y + 0.21);
+  doc.text("STATE",  colState,     y + 0.21);
+  doc.text("VERIFY", colQR,        y + 0.21);
+  y += 0.45;
+
+  doc.setFont("helvetica", "normal");
+  doc.setFontSize(9);
+  doc.setTextColor(...INK);
+
+  const ROW = 0.55;
+  const PAGE_H = doc.internal.pageSize.getHeight();
+
+  for (const d of devices) {
+    if (y + ROW > PAGE_H - 1.0) {
+      brandedFooter(doc, { confidential: false });
+      doc.addPage();
+      y = 1.0;
+    }
+    doc.setFont("helvetica", "bold");
+    doc.text(d.tag, colTag + 0.1, y + 0.18);
+    doc.setFont("helvetica", "normal");
+    doc.text(d.model || "—", colModel, y + 0.18, { maxWidth: 1.9 });
+    doc.text(d.serial_number || "—", colSerial, y + 0.18, { maxWidth: 1.7 });
+    doc.text(d.state || "—", colState, y + 0.18);
+
+    if (siteOrigin) {
+      const ref = d.cert_number || d.tag;
+      const url = `${siteOrigin}/v?cert=${encodeURIComponent(ref)}`;
+      try { await drawQR(doc, url, colQR, y - 0.05, 0.5); } catch { /* ignore */ }
+    }
+
+    doc.setDrawColor(...RULE);
+    doc.setLineWidth(0.003);
+    doc.line(M, y + ROW - 0.05, W - M, y + ROW - 0.05);
+    y += ROW;
+  }
+
+  y += 0.2;
+
+  // Receiver acknowledgement
+  if (y + 1.4 > PAGE_H - 1.0) {
+    brandedFooter(doc, { confidential: false });
+    doc.addPage();
+    y = 1.0;
+  }
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(8);
+  doc.setTextColor(...MUTED);
+  doc.text("RECEIVED BY", M, y);
+  doc.setDrawColor(...INK);
+  doc.setLineWidth(0.01);
+  doc.line(M, y + 0.7, M + 3, y + 0.7);
+  doc.line(W - M - 2.2, y + 0.7, W - M, y + 0.7);
+  doc.setFont("helvetica", "normal");
+  doc.setFontSize(8);
+  doc.setTextColor(...MUTED);
+  doc.text("Signature", M, y + 0.85);
+  doc.text("Date", W - M - 2.2, y + 0.85);
+
+  brandedFooter(doc, { confidential: false });
+  return doc;
+}

@@ -19,7 +19,7 @@ export const onRequestGet: PagesFunction<Env, "id"> = async ({ env, params }) =>
 
   const devices = await env.DB
     .prepare(
-      `SELECT id, tag, box_tag, platform, model, serial_number, state, technician, created_at
+      `SELECT id, tag, box_tag, platform, model, serial_number, state, technician, cert_number, created_at
        FROM devices WHERE po_id = ?1 ORDER BY tag`
     )
     .bind(id)

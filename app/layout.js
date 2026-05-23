@@ -95,6 +95,37 @@ const orgJsonLd = {
   sameAs: [],
 };
 
+const localBusinessJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "LocalBusiness",
+  "@id": `${SITE_URL}#localbusiness`,
+  name: "CBR Labs LLC",
+  url: SITE_URL,
+  image: `${SITE_URL}/og.png`,
+  email: "rob@cbr-labs.com",
+  telephone: "+1-703-623-8835",
+  priceRange: "$$",
+  address: {
+    "@type": "PostalAddress",
+    streetAddress: "5927 Tilbury Road",
+    addressLocality: "Alexandria",
+    addressRegion: "VA",
+    postalCode: "22310",
+    addressCountry: "US",
+  },
+  areaServed: "US",
+  description:
+    "US-based hardware redaction facility serving federal, state, and local agencies. Permanent physical removal of cameras, microphones, speakers, and wireless radios from iPad and Android tablets.",
+  openingHoursSpecification: [
+    {
+      "@type": "OpeningHoursSpecification",
+      dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+      opens: "09:00",
+      closes: "17:00",
+    },
+  ],
+};
+
 export default function RootLayout({ children }) {
   return (
     <html
@@ -107,6 +138,10 @@ export default function RootLayout({ children }) {
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(orgJsonLd) }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(localBusinessJsonLd) }}
         />
       </head>
       <body className="min-h-screen flex flex-col">

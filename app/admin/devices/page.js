@@ -23,15 +23,19 @@ function DevicesPage() {
   const [list, setList] = useState(null);
   const [err, setErr] = useState(null);
   const [selected, setSelected] = useState(new Set());
+  const [bulkState, setBulkState] = useState("");
+  const [bulkBusy, setBulkBusy] = useState(false);
+  const [bulkResult, setBulkResult] = useState(null);
 
-  useEffect(() => {
+  const load = () => {
     const qs = new URLSearchParams();
     if (stateFilter) qs.set("state", stateFilter);
     if (q) qs.set("q", q);
     api.get(`/api/devices?${qs}`)
       .then((d) => setList(d.devices || []))
       .catch((e) => setErr(e.message));
-  }, [stateFilter, q]);
+  };
+  useEffect(load, [stateFilter, q]);
 
   function setParam(k, v) {
     const next = new URLSearchParams(sp.toString());
@@ -47,7 +51,38 @@ function DevicesPage() {
     });
   }
 
+  function toggleAll() {
+    if (!list) return;
+    setSelected((cur) => {
+      if (cur.size === list.length) return new Set();
+      return new Set(list.map((d) => d.tag));
+    });
+  }
+
   const selectedTags = useMemo(() => Array.from(selected), [selected]);
+
+  async function applyBulk() {
+    if (!bulkState || selectedTags.length === 0) return;
+    if (!confirm(`Set ${selectedTags.length} device${selectedTags.length === 1 ? "" : "s"} to ${bulkState}?`)) return;
+    setBulkBusy(true);
+    setBulkResult(null);
+    let ok = 0, fail = 0;
+    const errs = [];
+    for (const tag of selectedTags) {
+      try {
+        await api.post(`/api/devices/${encodeURIComponent(tag)}/state`, { to_state: bulkState });
+        ok += 1;
+      } catch (e) {
+        fail += 1;
+        errs.push(`${tag}: ${e.message}`);
+      }
+    }
+    setBulkBusy(false);
+    setBulkResult({ ok, fail, errs });
+    setSelected(new Set());
+    setBulkState("");
+    load();
+  }
 
   return (
     <div>
@@ -66,6 +101,50 @@ function DevicesPage() {
           </>
         }
       />
+
+      {selectedTags.length ? (
+        <div className="surface mb-4 flex flex-wrap items-center gap-2 p-3">
+          <div className="font-mono text-[10px] uppercase tracking-[0.16em] text-muted">
+            {selectedTags.length} selected
+          </div>
+          <div className="rule h-5 w-px" />
+          <select
+            value={bulkState}
+            onChange={(e) => setBulkState(e.target.value)}
+            className="rounded-lg border bg-paper px-3 py-2 text-sm hairline"
+          >
+            <option value="">Set state to…</option>
+            {STATES.map((s) => <option key={s} value={s}>{s}</option>)}
+          </select>
+          <button
+            disabled={!bulkState || bulkBusy}
+            onClick={applyBulk}
+            className="btn-accent"
+          >
+            {bulkBusy ? `Updating ${selectedTags.length}…` : `Apply to ${selectedTags.length}`}
+          </button>
+          <button
+            disabled={bulkBusy}
+            onClick={() => setSelected(new Set())}
+            className="btn-ghost"
+          >
+            Clear
+          </button>
+        </div>
+      ) : null}
+
+      {bulkResult ? (
+        <div className={`surface mb-4 p-3 text-sm ${bulkResult.fail ? "text-amber-700" : "text-ink"}`}>
+          Updated {bulkResult.ok}{bulkResult.fail ? `, ${bulkResult.fail} failed` : ""}.
+          {bulkResult.errs?.length ? (
+            <details className="mt-1"><summary className="cursor-pointer text-xs text-muted">Details</summary>
+              <ul className="mt-1 list-disc pl-5 text-xs text-muted">
+                {bulkResult.errs.map((e, i) => <li key={i}>{e}</li>)}
+              </ul>
+            </details>
+          ) : null}
+        </div>
+      ) : null}
 
       <div className="surface mb-4 flex flex-wrap items-center gap-2 p-3">
         <input
@@ -93,7 +172,15 @@ function DevicesPage() {
         <table className="w-full text-sm">
           <thead className="bg-ink/[0.03] text-left font-mono text-[10px] uppercase tracking-[0.14em] text-muted">
             <tr>
-              <th className="px-3 py-3 w-8"></th>
+              <th className="px-3 py-3 w-8">
+                <input
+                  type="checkbox"
+                  aria-label="Select all on page"
+                  checked={list ? list.length > 0 && selected.size === list.length : false}
+                  onChange={toggleAll}
+                  className="h-4 w-4 accent-ink"
+                />
+              </th>
               <th className="px-4 py-3">Tag</th>
               <th className="px-4 py-3">State</th>
               <th className="px-4 py-3">Customer / PO</th>
