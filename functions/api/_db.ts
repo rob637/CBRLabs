@@ -52,6 +52,18 @@ export async function mintCertNumber(db: D1Database, prefix = "CBR"): Promise<st
   return formatTag(`${prefix}-CERT`, v);
 }
 
+export async function mintProposalNumber(db: D1Database, prefix = "CBR"): Promise<string> {
+  const v = await mintCounter(db, "proposal_number");
+  return formatTag(`${prefix}-PROP`, v);
+}
+
+/** Generate a 32-char URL-safe random token. */
+export function generateToken(): string {
+  const bytes = new Uint8Array(24);
+  crypto.getRandomValues(bytes);
+  return [...bytes].map((b) => b.toString(16).padStart(2, "0")).join("");
+}
+
 /** Parse JSON body with consistent error shape. */
 export async function parseJson<T = unknown>(req: Request): Promise<T> {
   try {

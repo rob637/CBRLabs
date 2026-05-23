@@ -12,11 +12,12 @@ const nav = [
   { href: "/admin/scan",     label: "Scan" },
   { href: "/admin/labels",   label: "Labels" },
   { href: "/admin/customers",label: "Customers" },
-  { href: "/admin/pos",      label: "POs" },
-  { href: "/admin/invoices", label: "Invoices" },
-  { href: "/admin/receipts", label: "Cash receipts" },
-  { href: "/admin/expenses", label: "Expenses" },
-  { href: "/admin/documents",label: "Documents" },
+  { href: "/admin/pos",       label: "POs" },
+  { href: "/admin/invoices",  label: "Invoices" },
+  { href: "/admin/receipts",  label: "Cash receipts" },
+  { href: "/admin/proposals", label: "Proposals" },
+  { href: "/admin/leads",     label: "Leads" },
+  { href: "/admin/documents", label: "Documents" },
 ];
 
 export default function AdminShell({ children }) {

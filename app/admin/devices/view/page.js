@@ -8,6 +8,7 @@ import PageHeader from "../../_components/PageHeader";
 import StateChip from "../../_components/StateChip";
 import QRCanvas from "../../_components/QRCanvas";
 import PhotoUpload from "../../_components/PhotoUpload";
+import { buildCertPDF, downloadDoc } from "../../_components/BrandedPDF";
 
 const NEXT_STATE = {
   RECEIVED:    ["INTAKE","HOLD"],
@@ -77,6 +78,7 @@ function DeviceView() {
         actions={
           <>
             <Link href={`/admin/labels?tags=${d.tag}`} className="btn-ghost">Print label</Link>
+            <CertButton tag={d.tag} state={d.state} />
             <Link href="/admin/devices" className="btn-ghost">← Devices</Link>
           </>
         }
@@ -287,5 +289,35 @@ function Inp({ name, label, defaultValue, mono }) {
         className={`mt-1 w-full rounded-lg border bg-paper px-3 py-2 text-sm hairline ${mono ? "font-mono" : ""}`}
       />
     </label>
+  );
+}
+
+function CertButton({ tag, state }) {
+  const eligible = ["CERT_ISSUED","PACKED","SHIPPED","DELIVERED","RETURNED"].includes(state);
+  const [busy, setBusy] = useState(false);
+  if (!eligible) return null;
+  async function dl() {
+    setBusy(true);
+    try {
+      const d = await api.get(`/api/devices/${encodeURIComponent(tag)}/cert`);
+      const verifyUrl = `${window.location.origin}/admin/devices/view?tag=${encodeURIComponent(tag)}`;
+      const doc = await buildCertPDF({
+        device: d.device,
+        customer: d.customer,
+        redactions: (d.redactions || []).map((r) => {
+          const label = (REDACTIONS.find(([code]) => code === r) || [])[1];
+          return { code: r, label: label || r };
+        }),
+        events: d.events,
+        verifyUrl,
+      });
+      downloadDoc(doc, `cert-of-redaction-${tag}.pdf`);
+    } catch (e) { alert(e.message); }
+    finally { setBusy(false); }
+  }
+  return (
+    <button onClick={dl} disabled={busy} className="btn-accent">
+      {busy ? "Building…" : "Download cert"}
+    </button>
   );
 }

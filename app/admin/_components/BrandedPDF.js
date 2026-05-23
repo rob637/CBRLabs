@@ -1,0 +1,430 @@
+"use client";
+
+// Shared branded PDF utilities (jsPDF). Used by invoice, cert, and proposal
+// generators. All branded docs flow through `newBrandedDoc` for consistent
+// "CBR LABS" letterhead with federal credentials.
+
+import { jsPDF } from "jspdf";
+import QRCode from "qrcode";
+
+export const COMPANY = {
+  name: "CBR Labs LLC",
+  tagline: "Hardware Redaction for iPad & Android Tablets",
+  email: "rob@cbr-labs.com",
+  phone: "703-623-8835",
+  address: "5927 Tilbury Rd, Alexandria, VA 22310",
+  cage: "14Y35",
+  uei: "K4MZG4KC1MY9",
+  duns: "144834451",
+  site: "cbr-labs.com",
+};
+
+const COPPER = [199, 107, 58];
+const INK    = [11, 14, 19];
+const MUTED  = [110, 115, 122];
+const RULE   = [228, 226, 220];
+
+/** Create a Letter-size jsPDF and stamp the CBR header. */
+export function newBrandedDoc({ docKind, docNumber }) {
+  const doc = new jsPDF({ unit: "in", format: "letter" });
+  const W = doc.internal.pageSize.getWidth();
+  const M = 0.6;
+
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(22);
+  doc.setTextColor(...INK);
+  doc.text("CBR LABS", M, 0.85);
+
+  doc.setFont("helvetica", "normal");
+  doc.setFontSize(8);
+  doc.setTextColor(...MUTED);
+  doc.text(COMPANY.tagline.toUpperCase(), M, 1.05, { charSpace: 0.02 });
+
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(11);
+  doc.setTextColor(...INK);
+  doc.text((docKind || "").toUpperCase(), W - M, 0.85, { align: "right" });
+  doc.setFont("helvetica", "normal");
+  doc.setFontSize(9);
+  doc.setTextColor(...MUTED);
+  doc.text(docNumber || "", W - M, 1.05, { align: "right" });
+
+  doc.setDrawColor(...COPPER);
+  doc.setLineWidth(0.015);
+  doc.line(M, 1.2, W - M, 1.2);
+
+  doc.setFont("helvetica", "normal");
+  doc.setFontSize(8);
+  doc.setTextColor(...MUTED);
+  doc.text(COMPANY.name, M, 1.4);
+  doc.text(COMPANY.address, M, 1.55);
+  doc.text(`${COMPANY.email}  ·  ${COMPANY.phone}  ·  ${COMPANY.site}`, M, 1.7);
+
+  const right = W - M;
+  doc.text(`CAGE  ${COMPANY.cage}`, right, 1.4, { align: "right" });
+  doc.text(`UEI   ${COMPANY.uei}`, right, 1.55, { align: "right" });
+  doc.text(`SAM.gov registered`, right, 1.7, { align: "right" });
+
+  doc.setDrawColor(...RULE);
+  doc.setLineWidth(0.005);
+  doc.line(M, 1.9, W - M, 1.9);
+
+  return { doc, W, M, y: 2.1 };
+}
+
+export function brandedFooter(doc, opts = {}) {
+  const W = doc.internal.pageSize.getWidth();
+  const H = doc.internal.pageSize.getHeight();
+  const M = 0.6;
+  doc.setDrawColor(...RULE);
+  doc.setLineWidth(0.005);
+  doc.line(M, H - 0.6, W - M, H - 0.6);
+  doc.setFont("helvetica", "normal");
+  doc.setFontSize(7);
+  doc.setTextColor(...MUTED);
+  doc.text(`${COMPANY.name}  ·  ${COMPANY.address}  ·  ${COMPANY.email}`, M, H - 0.4);
+  doc.text(opts.confidential ? "Confidential — for recipient use only" : "", M, H - 0.25);
+  doc.text(`Page ${doc.getNumberOfPages()}`, W - M, H - 0.25, { align: "right" });
+}
+
+export const money = (cents) =>
+  `$${((cents || 0) / 100).toLocaleString(undefined, {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  })}`;
+
+/** Two-column meta block. */
+export function metaBlock(doc, rows, { x, y, w, lineHeight = 0.22 }) {
+  doc.setFontSize(8);
+  for (const r of rows) {
+    doc.setTextColor(...MUTED);
+    doc.setFont("helvetica", "normal");
+    doc.text(r.label.toUpperCase(), x, y);
+    doc.setTextColor(...INK);
+    doc.setFont("helvetica", "bold");
+    doc.text(r.value || "—", x + w, y, { align: "right" });
+    y += lineHeight;
+  }
+  return y;
+}
+
+export function lineTable(doc, lines, { y, M, W }) {
+  const colDesc = M;
+  const colQty  = W - M - 2.4;
+  const colUnit = W - M - 1.4;
+  const colAmt  = W - M;
+
+  doc.setFillColor(245, 244, 240);
+  doc.rect(M, y, W - M * 2, 0.32, "F");
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(8);
+  doc.setTextColor(...MUTED);
+  doc.text("DESCRIPTION", colDesc + 0.1, y + 0.21);
+  doc.text("QTY",   colQty, y + 0.21, { align: "right" });
+  doc.text("UNIT",  colUnit, y + 0.21, { align: "right" });
+  doc.text("AMOUNT", colAmt - 0.05, y + 0.21, { align: "right" });
+  y += 0.42;
+
+  doc.setFont("helvetica", "normal");
+  doc.setFontSize(9);
+  doc.setTextColor(...INK);
+  for (const l of lines) {
+    const wrapped = doc.splitTextToSize(l.description || "", colQty - colDesc - 0.2);
+    const lineH = Math.max(0.22, wrapped.length * 0.16);
+    doc.text(wrapped, colDesc + 0.1, y);
+    doc.text(String(l.quantity ?? 1), colQty, y, { align: "right" });
+    doc.text(money(l.unit_price_cents), colUnit, y, { align: "right" });
+    doc.text(money(l.amount_cents), colAmt - 0.05, y, { align: "right" });
+    y += lineH + 0.06;
+    doc.setDrawColor(...RULE);
+    doc.setLineWidth(0.003);
+    doc.line(M, y - 0.04, W - M, y - 0.04);
+  }
+  return y + 0.1;
+}
+
+export function totalsBlock(doc, rows, { y, W, M }) {
+  doc.setFontSize(9);
+  const labelX = W - M - 1.5;
+  const valX   = W - M - 0.05;
+  for (const r of rows) {
+    doc.setFont("helvetica", r.bold ? "bold" : "normal");
+    doc.setTextColor(...(r.bold ? INK : MUTED));
+    doc.text(r.label.toUpperCase(), labelX, y, { align: "right" });
+    doc.setTextColor(...INK);
+    doc.text(r.value, valX, y, { align: "right" });
+    y += r.bold ? 0.28 : 0.22;
+  }
+  return y;
+}
+
+export async function drawQR(doc, text, x, y, size = 1.1) {
+  const dataUrl = await QRCode.toDataURL(text, {
+    errorCorrectionLevel: "M",
+    margin: 0,
+    scale: 8,
+  });
+  doc.addImage(dataUrl, "PNG", x, y, size, size);
+}
+
+export function downloadDoc(doc, filename) {
+  doc.save(filename);
+}
+
+// ---------- Specific doc generators ----------
+
+export function buildInvoicePDF({ invoice, customer, lines, paid_cents }) {
+  const { doc, W, M, y: y0 } = newBrandedDoc({
+    docKind: "Invoice",
+    docNumber: invoice.invoice_number || `#${invoice.id}`,
+  });
+  let y = y0;
+
+  // Bill To
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(8);
+  doc.setTextColor(...MUTED);
+  doc.text("BILL TO", M, y);
+  doc.setFont("helvetica", "normal");
+  doc.setFontSize(10);
+  doc.setTextColor(...INK);
+  doc.text(customer?.name || "—", M, y + 0.22);
+  if (customer?.contact_name) doc.text(customer.contact_name, M, y + 0.4);
+  if (customer?.email) doc.text(customer.email, M, y + 0.56);
+
+  // Meta block (right)
+  metaBlock(doc, [
+    { label: "Issue date", value: invoice.issue_date || "—" },
+    { label: "Due date",   value: invoice.due_date || "—" },
+    { label: "Status",     value: invoice.status || "DRAFT" },
+    { label: "PO ref",     value: invoice.po_number || "—" },
+  ], { x: W - M - 2.2, y, w: 2.2 });
+
+  y += 1.1;
+
+  y = lineTable(doc, lines, { y, M, W });
+
+  const subtotal = invoice.subtotal_cents || 0;
+  const tax = invoice.tax_cents || 0;
+  const total = invoice.total_cents || subtotal + tax;
+  const balance = Math.max(0, total - (paid_cents || 0));
+
+  y = totalsBlock(doc, [
+    { label: "Subtotal", value: money(subtotal) },
+    { label: "Tax",      value: money(tax) },
+    { label: "Total",    value: money(total), bold: true },
+    { label: "Paid",     value: money(paid_cents || 0) },
+    { label: "Balance",  value: money(balance), bold: true },
+  ], { y: y + 0.1, W, M });
+
+  // Remit-to box
+  y += 0.4;
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(8);
+  doc.setTextColor(...MUTED);
+  doc.text("REMIT TO", M, y);
+  doc.setFont("helvetica", "normal");
+  doc.setFontSize(9);
+  doc.setTextColor(...INK);
+  doc.text(`${COMPANY.name} · ${COMPANY.address}`, M, y + 0.18);
+  doc.text(`Make checks payable to "${COMPANY.name}". ACH/wire on request.`, M, y + 0.34);
+
+  if (invoice.notes) {
+    y += 0.7;
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(8);
+    doc.setTextColor(...MUTED);
+    doc.text("NOTES", M, y);
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(9);
+    doc.setTextColor(...INK);
+    const wrapped = doc.splitTextToSize(invoice.notes, W - M * 2);
+    doc.text(wrapped, M, y + 0.18);
+  }
+
+  brandedFooter(doc, { confidential: true });
+  return doc;
+}
+
+export function buildProposalPDF({ proposal, customer, lines, shareUrl }) {
+  const { doc, W, M, y: y0 } = newBrandedDoc({
+    docKind: "Proposal",
+    docNumber: proposal.proposal_number || `#${proposal.id}`,
+  });
+  let y = y0;
+
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(8);
+  doc.setTextColor(...MUTED);
+  doc.text("PREPARED FOR", M, y);
+  doc.setFont("helvetica", "normal");
+  doc.setFontSize(10);
+  doc.setTextColor(...INK);
+  doc.text(customer?.name || "—", M, y + 0.22);
+  if (customer?.contact_name) doc.text(customer.contact_name, M, y + 0.4);
+
+  metaBlock(doc, [
+    { label: "Issued",       value: proposal.issued_at?.slice(0, 10) || new Date().toISOString().slice(0, 10) },
+    { label: "Valid until",  value: proposal.valid_until || "—" },
+    { label: "Status",       value: proposal.status || "DRAFT" },
+  ], { x: W - M - 2.2, y, w: 2.2 });
+
+  y += 1.1;
+
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(14);
+  doc.setTextColor(...INK);
+  doc.text(proposal.title || "Hardware Redaction Engagement", M, y);
+  y += 0.3;
+
+  if (proposal.scope_summary) {
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(9);
+    doc.setTextColor(...MUTED);
+    const wrapped = doc.splitTextToSize(proposal.scope_summary, W - M * 2);
+    doc.text(wrapped, M, y);
+    y += wrapped.length * 0.14 + 0.2;
+  }
+
+  y = lineTable(doc, lines, { y, M, W });
+
+  y = totalsBlock(doc, [
+    { label: "Subtotal", value: money(proposal.subtotal_cents || 0) },
+    { label: "Tax",      value: money(proposal.tax_cents || 0) },
+    { label: "Total",    value: money(proposal.total_cents || 0), bold: true },
+  ], { y: y + 0.1, W, M });
+
+  if (proposal.terms) {
+    y += 0.4;
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(8);
+    doc.setTextColor(...MUTED);
+    doc.text("TERMS", M, y);
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(9);
+    doc.setTextColor(...INK);
+    const wrapped = doc.splitTextToSize(proposal.terms, W - M * 2);
+    doc.text(wrapped, M, y + 0.18);
+    y += wrapped.length * 0.14 + 0.3;
+  }
+
+  if (shareUrl) {
+    y += 0.2;
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(9);
+    doc.setTextColor(...INK);
+    doc.text("Accept this proposal online:", M, y);
+    doc.setFont("helvetica", "normal");
+    doc.setTextColor(...COPPER);
+    doc.text(shareUrl, M, y + 0.18);
+  }
+
+  brandedFooter(doc, { confidential: true });
+  return doc;
+}
+
+export async function buildCertPDF({ device, customer, redactions, events, verifyUrl }) {
+  const { doc, W, M, y: y0 } = newBrandedDoc({
+    docKind: "Certificate of Redaction",
+    docNumber: device.cert_serial || device.tag,
+  });
+  let y = y0;
+
+  // Big confident headline
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(16);
+  doc.setTextColor(...INK);
+  doc.text("Certificate of Hardware Redaction", M, y);
+  y += 0.35;
+  doc.setFont("helvetica", "normal");
+  doc.setFontSize(9);
+  doc.setTextColor(...MUTED);
+  doc.text(
+    "CBR Labs certifies that the device identified below was physically modified by trained technicians, "
+    + "with the components or capabilities listed irreversibly disabled or removed.",
+    M, y, { maxWidth: W - M * 2 }
+  );
+  y += 0.6;
+
+  // Device + customer side-by-side
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(8);
+  doc.setTextColor(...MUTED);
+  doc.text("DEVICE", M, y);
+  doc.text("CUSTOMER", W / 2, y);
+
+  doc.setFont("helvetica", "normal");
+  doc.setFontSize(10);
+  doc.setTextColor(...INK);
+  const dy = y + 0.22;
+  doc.text(`Tag: ${device.tag}`, M, dy);
+  doc.text(`Model: ${device.model || "—"}`, M, dy + 0.18);
+  if (device.serial) doc.text(`Serial: ${device.serial}`, M, dy + 0.36);
+  if (device.imei)   doc.text(`IMEI: ${device.imei}`, M, dy + 0.54);
+
+  doc.text(customer?.name || "—", W / 2, dy);
+  if (customer?.contact_name) doc.text(customer.contact_name, W / 2, dy + 0.18);
+  if (customer?.email)        doc.text(customer.email, W / 2, dy + 0.36);
+
+  y = dy + 0.85;
+
+  // Redactions performed
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(8);
+  doc.setTextColor(...MUTED);
+  doc.text("REDACTIONS PERFORMED", M, y);
+  y += 0.2;
+  doc.setFont("helvetica", "normal");
+  doc.setFontSize(10);
+  doc.setTextColor(...INK);
+  if (!redactions || redactions.length === 0) {
+    doc.setTextColor(...MUTED);
+    doc.text("(none recorded)", M, y);
+    y += 0.2;
+  } else {
+    for (const r of redactions) {
+      doc.text(`• ${r.label || r.code || r}`, M, y);
+      y += 0.2;
+    }
+  }
+
+  y += 0.2;
+
+  // Chain of custody
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(8);
+  doc.setTextColor(...MUTED);
+  doc.text("CHAIN OF CUSTODY", M, y);
+  y += 0.22;
+  doc.setFont("helvetica", "normal");
+  doc.setFontSize(9);
+  doc.setTextColor(...INK);
+  for (const e of (events || []).slice(0, 10)) {
+    const when = (e.occurred_at || e.created_at || "").replace("T", " ").slice(0, 16);
+    const note = e.notes ? ` — ${e.notes}` : "";
+    doc.text(`${when}   ${e.event_type || "STATE"}   ${e.to_state || e.from_state || ""}${note}`, M, y);
+    y += 0.16;
+  }
+
+  // QR + signature block at bottom
+  const sigY = doc.internal.pageSize.getHeight() - 2.2;
+  if (verifyUrl) {
+    await drawQR(doc, verifyUrl, M, sigY, 1.1);
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(7);
+    doc.setTextColor(...MUTED);
+    doc.text("Verify online", M, sigY + 1.25);
+  }
+
+  doc.setDrawColor(...INK);
+  doc.setLineWidth(0.01);
+  doc.line(W / 2, sigY + 0.9, W - M, sigY + 0.9);
+  doc.setFont("helvetica", "normal");
+  doc.setFontSize(8);
+  doc.setTextColor(...MUTED);
+  doc.text("Authorized signature  ·  CBR Labs LLC", W / 2, sigY + 1.05);
+  doc.text(`Issued: ${(device.cert_issued_at || new Date().toISOString()).slice(0, 10)}`, W / 2, sigY + 1.25);
+
+  brandedFooter(doc, { confidential: false });
+  return doc;
+}

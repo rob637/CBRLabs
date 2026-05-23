@@ -6,7 +6,7 @@ Open the dashboard in another tab and walk top to bottom.
 
 ---
 
-### ☐ 1. Create the database (2 min)
+### ☐ 1. Create the database (3 min)
 
 **Workers & Pages → D1 → Create**
 
@@ -14,20 +14,21 @@ Open the dashboard in another tab and walk top to bottom.
 - After it's created, click into it → **Console** tab
 - Open [db/schema.sql](db/schema.sql) here in VS Code, **Select All**, **Copy**
 - Paste into the D1 console, click **Execute**
+- Then open [db/schema-v2.sql](db/schema-v2.sql), **Select All**, **Copy**, paste, **Execute**. (Adds leads + proposals + share_tokens tables. Safe to re-run.)
 
-Done when you see a green confirmation and the **Tables** tab lists `customers`, `purchase_orders`, `devices`, `device_events`, etc.
+Done when the **Tables** tab lists `customers`, `purchase_orders`, `devices`, `device_events`, `invoices`, `proposals`, `leads`, `share_tokens`, etc.
 
 ---
 
-### ☐ 2. Create the photo bucket (1 min)
+### ☐ 2. Create the file bucket (1 min)
 
 **R2 → Create bucket**
 
-- **Name:** `cbr-labs-photos`
+- **Name:** `cbr-labs-files`
 - Location: **Automatic**
 - Leave public access **off**
 
-Done. Nothing else to configure on the bucket.
+Done. Nothing else to configure on the bucket. It holds intake photos, document vault uploads, and any other binary assets.
 
 ---
 
@@ -37,23 +38,24 @@ Done. Nothing else to configure on the bucket.
 
 **Bindings → Add binding** (do this twice):
 
-| Type        | Variable name | Resource           |
-| ----------- | ------------- | ------------------ |
-| D1 database | `DB`          | `cbr_labs_admin`   |
-| R2 bucket   | `PHOTOS`      | `cbr-labs-photos`  |
+| Type        | Variable name | Resource          |
+| ----------- | ------------- | ----------------- |
+| D1 database | `DB`          | `cbr_labs_admin`  |
+| R2 bucket   | `FILES`       | `cbr-labs-files`  |
 
 **Variables and Secrets → Add variable** (Production, one row each — paste exactly):
 
-| Name              | Value                                  |
-| ----------------- | -------------------------------------- |
-| `COMPANY_NAME`    | `CBR Labs LLC`                         |
-| `COMPANY_EMAIL`   | `rob@cbr-labs.com`                     |
-| `COMPANY_PHONE`   | `703-623-8835`                         |
-| `COMPANY_ADDRESS` | `5927 Tilbury Rd, Alexandria, VA 22310`|
-| `CAGE_CODE`       | `14Y35`                                |
-| `UEI`             | `K4MZG4KC1MY9`                         |
-| `INVOICE_PREFIX`  | `CBR`                                  |
-| `TAG_YEAR_PREFIX` | `CBR`                                  |
+| Name                  | Value                          |
+| --------------------- | ------------------------------ |
+| `COMPANY_NAME`        | `CBR Labs LLC`                 |
+| `COMPANY_EMAIL`       | `rob@cbr-labs.com`             |
+| `COMPANY_PHONE`       | `703-623-8835`                 |
+| `COMPANY_ADDRESS_1`   | `5927 Tilbury Rd`              |
+| `COMPANY_ADDRESS_2`   | `Alexandria, VA 22310`         |
+| `COMPANY_CAGE`        | `14Y35`                        |
+| `COMPANY_UEI`         | `K4MZG4KC1MY9`                 |
+| `INVOICE_PREFIX`      | `CBR`                          |
+| `TAG_YEAR_PREFIX`     | `CBR`                          |
 
 **Deployments → ⋯ on the latest → Retry deployment.** This restart is what makes the new bindings active.
 
@@ -74,6 +76,8 @@ Done. Nothing else to configure on the bucket.
 - Save.
 
 **Now do it again** — same wizard, same settings, but **Path: `api`**. This locks the data endpoints too.
+
+**⚠ Important — keep `/public/*` open.** The lead form (`/public/leads`) and customer proposal-accept page (`/public/proposals/{token}`) MUST be reachable without login. Do NOT create an Access app covering `/public/*`. If you ever add a broader `/*` rule, add a **Bypass** policy first for `Path: public/*`.
 
 ---
 

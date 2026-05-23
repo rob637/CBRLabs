@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Reveal from "../../components/Reveal";
-import { ArrowRightIcon, CheckIcon } from "../../components/Icons";
+import { CheckIcon } from "../../components/Icons";
+import ContactForm from "./ContactForm";
 
 export const metadata = {
   title: "Contact",
@@ -8,9 +9,6 @@ export const metadata = {
     "Talk to Rob Pfleghardt at CBR Labs about hardware redaction for iPad and Android tablets. SAM.gov registered. Typical response: one business day.",
   alternates: { canonical: "/contact" },
 };
-
-const inputClass =
-  "mt-1 w-full rounded-xl border bg-paper px-4 py-3 text-sm text-ink placeholder:text-muted focus:outline-none focus:border-accent hairline";
 
 export default function Contact() {
   return (
@@ -91,46 +89,7 @@ export default function Contact() {
           </div>
 
           <Reveal delay={120} className="lg:col-span-7">
-            <form
-              action="mailto:rob@cbr-labs.com"
-              method="post"
-              encType="text/plain"
-              className="surface grid gap-4 p-7"
-            >
-              <label className="text-xs text-muted">
-                Name
-                <input name="name" required placeholder="Your name" className={inputClass} />
-              </label>
-              <label className="text-xs text-muted">
-                Company / Organization
-                <input name="company" placeholder="Company" className={inputClass} />
-              </label>
-              <div className="grid gap-4 sm:grid-cols-2">
-                <label className="text-xs text-muted">
-                  Work email
-                  <input name="email" type="email" required placeholder="you@org.com" className={inputClass} />
-                </label>
-                <label className="text-xs text-muted">
-                  Phone (optional)
-                  <input name="phone" type="tel" placeholder="(555) 555-5555" className={inputClass} />
-                </label>
-              </div>
-              <label className="text-xs text-muted">
-                Project details
-                <textarea
-                  name="details"
-                  rows={6}
-                  placeholder="Platform (iPad / Android), models (e.g., A2602, Galaxy Tab S9), quantities, deadline, deployment environment, special requirements…"
-                  className={inputClass}
-                />
-              </label>
-              <button type="submit" className="btn-accent mt-2 py-3 text-[13px]">
-                Send request <ArrowRightIcon size={16} />
-              </button>
-              <p className="font-mono text-[10px] uppercase tracking-[0.12em] text-muted">
-                By submitting, you agree we may contact you about this request.
-              </p>
-            </form>
+            <ContactForm />
           </Reveal>
         </div>
       </section>
