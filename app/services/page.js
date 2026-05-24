@@ -71,13 +71,13 @@ export default function Services() {
           <Reveal delay={200} className="lg:col-span-5">
             <figure className="brand-figure aspect-[4/5] sm:aspect-[5/6] lg:aspect-[4/5]">
               <Image
-                src="/images/services.jpg"
-                alt="A tablet device on a clean workbench — the form factor CBR Labs redacts."
+                src="/images/services-tablet.jpg"
+                alt="Hands working on an opened tablet — board-level teardown of the kind CBR Labs performs during redaction."
                 fill
                 sizes="(min-width: 1024px) 480px, 100vw"
                 className="object-cover"
               />
-              <figcaption className="brand-figure-caption">Tablet redaction · iPad &amp; Android</figcaption>
+              <figcaption className="brand-figure-caption">Board-level work · iPad &amp; Android tablets</figcaption>
             </figure>
           </Reveal>
         </div>
