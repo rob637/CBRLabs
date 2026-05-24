@@ -1,5 +1,7 @@
-// GET /api/customers/:id — full detail including POs and devices
-import { Env, json, error, handle } from "../_utils";
+// GET   /api/customers/:id — full detail including POs and devices
+// PATCH /api/customers/:id — update editable fields
+import { Env, json, error, handle, requireActor } from "../_utils";
+import { parseJson } from "../_db";
 
 export const onRequestGet: PagesFunction<Env, "id"> = async ({ env, params }) => {
   const id = Number(params.id);
@@ -29,3 +31,33 @@ export const onRequestGet: PagesFunction<Env, "id"> = async ({ env, params }) =>
 
   return json({ customer, purchase_orders: pos.results, devices: devices.results });
 };
+
+export const onRequestPatch: PagesFunction<Env, "id"> = ({ env, request, params }) =>
+  handle(async () => {
+    requireActor(request);
+    const id = Number(params.id);
+    if (!Number.isFinite(id)) return error(400, "invalid id");
+    const body = await parseJson<{
+      name?: string; org?: string; email?: string; phone?: string;
+      billing_address?: string | null; notes?: string | null;
+    }>(request);
+
+    const fields: Array<[string, unknown]> = [];
+    if (body.name !== undefined)            fields.push(["name", (body.name || "").trim()]);
+    if (body.org !== undefined)             fields.push(["org", body.org || null]);
+    if (body.email !== undefined)           fields.push(["email", body.email || null]);
+    if (body.phone !== undefined)           fields.push(["phone", body.phone || null]);
+    if (body.billing_address !== undefined) fields.push(["billing_address", body.billing_address || null]);
+    if (body.notes !== undefined)           fields.push(["notes", body.notes || null]);
+    if (!fields.length) return json({ ok: true, customer: null });
+
+    const sets = fields.map(([k], i) => `${k} = ?${i + 1}`).join(", ");
+    const binds = fields.map(([, v]) => v);
+    binds.push(id);
+    const row = await env.DB
+      .prepare(`UPDATE customers SET ${sets} WHERE id = ?${binds.length} RETURNING *`)
+      .bind(...binds)
+      .first();
+    return json({ ok: true, customer: row });
+  });
+

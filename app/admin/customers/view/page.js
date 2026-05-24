@@ -21,11 +21,10 @@ function CustomerView() {
   const id = sp.get("id");
   const [data, setData] = useState(null);
   const [err, setErr] = useState(null);
+  const [editing, setEditing] = useState(false);
 
-  useEffect(() => {
-    if (!id) return;
-    api.get(`/api/customers/${id}`).then(setData).catch((e) => setErr(e.message));
-  }, [id]);
+  const load = () => api.get(`/api/customers/${id}`).then(setData).catch((e) => setErr(e.message));
+  useEffect(() => { if (id) load(); }, [id]);
 
   if (!id) return <div className="text-sm text-muted">Missing ?id</div>;
   if (err) return <div className="surface p-4 text-sm text-red-700">{err}</div>;
@@ -39,9 +38,16 @@ function CustomerView() {
         title={c.name}
         sub={c.org || null}
         actions={
-          <Link href="/admin/customers" className="btn-ghost">← All customers</Link>
+          <div className="flex gap-2">
+            <button onClick={() => setEditing((v) => !v)} className="btn-ghost">{editing ? "Close" : "Edit"}</button>
+            <Link href="/admin/customers" className="btn-ghost">← All customers</Link>
+          </div>
         }
       />
+
+      {editing ? (
+        <CustomerEditForm customer={c} onSaved={() => { setEditing(false); load(); }} />
+      ) : null}
 
       <div className="grid gap-6 lg:grid-cols-3">
         <div className="surface p-5 lg:col-span-1">
@@ -127,5 +133,61 @@ function CustomerView() {
         </div>
       </div>
     </div>
+  );
+}
+
+function CustomerEditForm({ customer, onSaved }) {
+  const [busy, setBusy] = useState(false);
+  const [err, setErr] = useState(null);
+
+  async function submit(e) {
+    e.preventDefault();
+    setBusy(true); setErr(null);
+    const fd = new FormData(e.currentTarget);
+    const body = Object.fromEntries(fd.entries());
+    try {
+      await api.patch(`/api/customers/${customer.id}`, body);
+      onSaved?.();
+    } catch (e) { setErr(e.message); }
+    finally { setBusy(false); }
+  }
+
+  return (
+    <form onSubmit={submit} className="surface my-4 grid gap-4 p-5 sm:grid-cols-2">
+      <EField name="name" label="Name *" defaultValue={customer.name || ""} required />
+      <EField name="org" label="Organization" defaultValue={customer.org || ""} />
+      <EField name="email" label="Email" type="email" defaultValue={customer.email || ""} />
+      <EField name="phone" label="Phone" type="tel" defaultValue={customer.phone || ""} />
+      <EField name="billing_address" label="Billing address (one line per row)" className="sm:col-span-2" textarea defaultValue={customer.billing_address || ""} />
+      <EField name="notes" label="Notes" className="sm:col-span-2" textarea defaultValue={customer.notes || ""} />
+      <div className="sm:col-span-2 flex items-center gap-3">
+        <button type="submit" disabled={busy} className="btn-accent">{busy ? "Saving…" : "Save changes"}</button>
+        {err ? <span className="text-sm text-red-600">{err}</span> : null}
+      </div>
+    </form>
+  );
+}
+
+function EField({ name, label, type = "text", required, textarea, className = "", defaultValue }) {
+  return (
+    <label className={`text-xs text-muted ${className}`}>
+      {label}
+      {textarea ? (
+        <textarea
+          name={name}
+          rows={3}
+          defaultValue={defaultValue}
+          className="mt-1 w-full rounded-lg border bg-paper px-3 py-2 text-sm text-ink hairline"
+        />
+      ) : (
+        <input
+          name={name}
+          type={type}
+          required={required}
+          defaultValue={defaultValue}
+          className="mt-1 w-full rounded-lg border bg-paper px-3 py-2 text-sm text-ink hairline"
+        />
+      )}
+    </label>
   );
 }

@@ -93,6 +93,16 @@ export const money = (cents) =>
     maximumFractionDigits: 2,
   })}`;
 
+function daysBetween(a, b) {
+  try {
+    const d1 = new Date(a + "T00:00:00Z");
+    const d2 = new Date(b + "T00:00:00Z");
+    const ms = d2.getTime() - d1.getTime();
+    if (!isFinite(ms)) return null;
+    return Math.max(0, Math.round(ms / 86400000));
+  } catch { return null; }
+}
+
 /** Two-column meta block. */
 export function metaBlock(doc, rows, { x, y, w, lineHeight = 0.22 }) {
   doc.setFontSize(8);
@@ -181,42 +191,57 @@ export function buildInvoicePDF({ invoice, customer, lines, paid_cents }) {
   let y = y0;
   const paid = paid_cents ?? invoice.paid_cents ?? 0;
 
-  // Bill To
+  // Bill To (left column)
   doc.setFont("helvetica", "bold");
   doc.setFontSize(8);
   doc.setTextColor(...MUTED);
   doc.text("BILL TO", M, y);
-  doc.setFont("helvetica", "normal");
-  doc.setFontSize(10);
+
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(11);
   doc.setTextColor(...INK);
-  doc.text(customer?.name || "—", M, y + 0.22);
-  let billY = y + 0.4;
+  doc.text(customer?.name || "—", M, y + 0.24);
+
+  let billY = y + 0.44;
+  doc.setFont("helvetica", "normal");
+  doc.setFontSize(9);
+  doc.setTextColor(...INK);
+  if (customer?.org && customer.org !== customer.name) {
+    doc.text(String(customer.org), M, billY);
+    billY += 0.16;
+  }
   if (customer?.billing_address) {
-    const addrLines = String(customer.billing_address).split(/\r?\n/);
-    doc.setFontSize(9);
+    const addrLines = String(customer.billing_address).split(/\r?\n/).map((s) => s.trim()).filter(Boolean);
     doc.setTextColor(...MUTED);
     for (const ln of addrLines) {
       doc.text(ln, M, billY);
       billY += 0.16;
     }
-    doc.setFontSize(10);
-    doc.setTextColor(...INK);
   }
   if (customer?.email) {
-    doc.setFontSize(9);
     doc.setTextColor(...MUTED);
     doc.text(customer.email, M, billY);
+    billY += 0.16;
+  }
+  if (customer?.phone) {
+    doc.setTextColor(...MUTED);
+    doc.text(customer.phone, M, billY);
+    billY += 0.16;
   }
 
-  // Meta block (right)
+  // Meta block (right column)
+  const terms = invoice.terms || (invoice.due_date && invoice.issue_date
+    ? daysBetween(invoice.issue_date, invoice.due_date) : null);
   metaBlock(doc, [
     { label: "Issue date", value: invoice.issue_date || "—" },
     { label: "Due date",   value: invoice.due_date || "—" },
+    { label: "Terms",      value: terms ? `Net ${terms}` : "Due on receipt" },
     { label: "Status",     value: invoice.status || "DRAFT" },
     { label: "PO ref",     value: invoice.po_number || "—" },
   ], { x: W - M - 2.2, y, w: 2.2 });
 
-  y += 1.1;
+  // Move below whichever column is taller
+  y = Math.max(billY + 0.1, y + 1.4);
 
   y = lineTable(doc, lines, { y, M, W });
 
@@ -225,16 +250,21 @@ export function buildInvoicePDF({ invoice, customer, lines, paid_cents }) {
   const total = invoice.total_cents || subtotal + tax;
   const balance = Math.max(0, total - paid);
 
-  y = totalsBlock(doc, [
+  const totalRows = [
     { label: "Subtotal", value: money(subtotal) },
-    { label: "Tax",      value: money(tax) },
-    { label: "Total",    value: money(total), bold: true },
-    { label: "Paid",     value: money(paid) },
-    { label: "Balance",  value: money(balance), bold: true },
-  ], { y: y + 0.1, W, M });
+  ];
+  if (tax) totalRows.push({ label: "Tax", value: money(tax) });
+  totalRows.push({ label: "Total", value: money(total), bold: true });
+  if (paid) {
+    totalRows.push({ label: "Paid", value: money(paid) });
+    totalRows.push({ label: "Balance due", value: money(balance), bold: true });
+  } else {
+    totalRows.push({ label: "Balance due", value: money(balance), bold: true });
+  }
+  y = totalsBlock(doc, totalRows, { y: y + 0.1, W, M });
 
   // Remit-to box
-  y += 0.4;
+  y += 0.45;
   doc.setFont("helvetica", "bold");
   doc.setFontSize(8);
   doc.setTextColor(...MUTED);
@@ -242,11 +272,12 @@ export function buildInvoicePDF({ invoice, customer, lines, paid_cents }) {
   doc.setFont("helvetica", "normal");
   doc.setFontSize(9);
   doc.setTextColor(...INK);
-  doc.text(`${COMPANY.name} · ${COMPANY.address}`, M, y + 0.18);
-  doc.text(`Make checks payable to "${COMPANY.name}". ACH/wire on request.`, M, y + 0.34);
+  doc.text(`${COMPANY.name}  ·  ${COMPANY.address}`, M, y + 0.18);
+  doc.text(`Make checks payable to "${COMPANY.name}". ACH / wire instructions on request.`, M, y + 0.34);
+  doc.text(`Questions: ${COMPANY.email}  ·  ${COMPANY.phone}`, M, y + 0.5);
 
   if (invoice.notes) {
-    y += 0.7;
+    y += 0.85;
     doc.setFont("helvetica", "bold");
     doc.setFontSize(8);
     doc.setTextColor(...MUTED);
