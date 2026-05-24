@@ -14,8 +14,8 @@ pages_build_output_dir = "out"
 # ---------------------------------------------------------------------------
 [[d1_databases]]
 binding = "DB"
-database_name = "cbr-labs-db"
-database_id = "REPLACE_WITH_D1_ID_FROM_WRANGLER"
+database_name = "cbr_labs_admin"
+database_id = "64879fa2-62a0-4125-9cec-908bea313b37"
 
 # ---------------------------------------------------------------------------
 # R2 bucket — receipts, device photos, certs, COI/CAGE docs, audit-packet zips.
