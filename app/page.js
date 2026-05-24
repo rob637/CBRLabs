@@ -134,7 +134,7 @@ export default function HomePage() {
               <div className="bg-paper p-5 sm:p-6">
                 <div className="font-mono text-[10px] uppercase tracking-[0.18em] text-muted">WOSB</div>
                 <div className="mt-2 font-display text-base font-medium tracking-tight">Woman Owned</div>
-                <div className="mt-1 text-xs text-muted">Small Business — set-aside eligible</div>
+                <div className="mt-1 text-xs text-muted">Set-aside eligible</div>
               </div>
             </div>
           </div>
@@ -146,14 +146,14 @@ export default function HomePage() {
         <Reveal>
           <figure className="brand-figure aspect-[16/9] sm:aspect-[21/9]">
             <Image
-              src="/images/home.jpg"
-              alt="Macro view of a circuit board, the level at which CBR Labs performs hardware redaction."
+              src="/images/home-tablet.jpg"
+              alt="iPad and Apple Pencil on a stone surface — representative of the tablet platforms CBR Labs redacts at the silicon level."
               fill
               priority
               sizes="(min-width: 1024px) 1024px, 100vw"
               className="object-cover"
             />
-            <figcaption className="brand-figure-caption">Board-level work · US facility</figcaption>
+            <figcaption className="brand-figure-caption">iPad &amp; Android · Redacted at the board</figcaption>
           </figure>
         </Reveal>
       </section>
@@ -162,15 +162,18 @@ export default function HomePage() {
       <section className="container-xl pb-16">
         <div className="surface overflow-hidden">
           <div className="grid grid-cols-2 md:grid-cols-4">
-            {stats.map((s, i) => (
-              <div
-                key={s.l}
-                className={`p-6 sm:p-8 hairline ${i < stats.length - 1 ? "border-r" : ""} ${i < 2 ? "border-b md:border-b-0" : ""}`}
-              >
-                <div className="font-display text-4xl font-medium tracking-tightest sm:text-5xl">{s.n}</div>
-                <div className="mt-2 font-mono text-[11px] uppercase tracking-[0.12em] text-muted">{s.l}</div>
-              </div>
-            ))}
+            {stats.map((s, i) => {
+              const focal = s.n === "0";
+              return (
+                <div
+                  key={s.l}
+                  className={`p-6 sm:p-8 hairline ${i < stats.length - 1 ? "border-r" : ""} ${i < 2 ? "border-b md:border-b-0" : ""}`}
+                >
+                  <div className={`font-display font-medium tracking-tightest ${focal ? "text-5xl text-accent sm:text-6xl" : "text-4xl sm:text-5xl"}`}>{s.n}</div>
+                  <div className="mt-2 font-mono text-[11px] uppercase tracking-[0.12em] text-muted">{s.l}</div>
+                </div>
+              );
+            })}
           </div>
         </div>
       </section>

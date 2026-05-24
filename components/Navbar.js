@@ -29,15 +29,19 @@ export default function Navbar() {
           </div>
 
           <nav className="hidden md:flex items-center gap-1 font-mono text-[11px] uppercase tracking-[0.14em]">
-            {links.map(([label, href]) => (
-              <Link
-                key={href}
-                href={href}
-                className="rounded-full px-3 py-1.5 text-muted hover:text-ink transition"
-              >
-                {label}
-              </Link>
-            ))}
+            {links.map(([label, href]) => {
+              const isActive = pathname === href || pathname?.startsWith(href + "/");
+              return (
+                <Link
+                  key={href}
+                  href={href}
+                  aria-current={isActive ? "page" : undefined}
+                  className={`relative rounded-full px-3 py-1.5 transition ${isActive ? "text-ink after:absolute after:left-3 after:right-3 after:-bottom-0.5 after:h-px after:bg-accent" : "text-muted hover:text-ink"}`}
+                >
+                  {label}
+                </Link>
+              );
+            })}
           </nav>
 
           <div className="flex items-center gap-2">
@@ -59,16 +63,20 @@ export default function Navbar() {
         {open && (
           <div className="md:hidden mt-2 surface p-3">
             <nav className="grid gap-1 font-mono text-[11px] uppercase tracking-[0.14em]">
-              {links.map(([label, href]) => (
-                <Link
-                  key={href}
-                  href={href}
-                  onClick={() => setOpen(false)}
-                  className="rounded-xl px-3 py-2.5 text-ink hover:bg-ink/[0.04]"
-                >
-                  {label}
-                </Link>
-              ))}
+              {links.map(([label, href]) => {
+                const isActive = pathname === href || pathname?.startsWith(href + "/");
+                return (
+                  <Link
+                    key={href}
+                    href={href}
+                    onClick={() => setOpen(false)}
+                    aria-current={isActive ? "page" : undefined}
+                    className={`rounded-xl px-3 py-2.5 hover:bg-ink/[0.04] ${isActive ? "text-accent" : "text-ink"}`}
+                  >
+                    {label}
+                  </Link>
+                );
+              })}
               <Link
                 href="/contact"
                 onClick={() => setOpen(false)}
