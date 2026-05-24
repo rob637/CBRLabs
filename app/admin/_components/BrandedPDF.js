@@ -63,7 +63,7 @@ export function newBrandedDoc({ docKind, docNumber }) {
   const right = W - M;
   doc.text(`CAGE     ${COMPANY.cage}`, right, 1.4, { align: "right" });
   doc.text(`SAM UEI  ${COMPANY.uei}`, right, 1.55, { align: "right" });
-  doc.text(`SAM.gov registered`, right, 1.7, { align: "right" });
+  doc.text(`Woman Owned Small Business`, right, 1.7, { align: "right" });
 
   doc.setDrawColor(...RULE);
   doc.setLineWidth(0.005);
