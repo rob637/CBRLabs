@@ -60,7 +60,9 @@ async function sendLeadEmail(
 ) {
   if (!env.RESEND_API_KEY) return; // dormant until key is set
   const to = env.LEADS_TO_EMAIL || "rob@cbr-labs.com";
-  const from = env.LEADS_FROM_EMAIL || "CBR Labs Leads <leads@cbr-labs.com>";
+  // FROM must be on a domain you've verified in Resend. Use no-reply@cbr-labs.com
+  // so replies route back to the submitter via Reply-To, not into a shared alias.
+  const from = env.LEADS_FROM_EMAIL || "CBR Labs <no-reply@cbr-labs.com>";
 
   const safe = (v: string | null | undefined) =>
     (v || "—").replace(/[<>&]/g, (c) => ({ "<": "&lt;", ">": "&gt;", "&": "&amp;" }[c]!));
