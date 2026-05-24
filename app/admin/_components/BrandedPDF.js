@@ -61,8 +61,8 @@ export function newBrandedDoc({ docKind, docNumber }) {
   doc.text(`${COMPANY.email}  ·  ${COMPANY.phone}  ·  ${COMPANY.site}`, M, 1.7);
 
   const right = W - M;
-  doc.text(`CAGE  ${COMPANY.cage}`, right, 1.4, { align: "right" });
-  doc.text(`UEI   ${COMPANY.uei}`, right, 1.55, { align: "right" });
+  doc.text(`CAGE     ${COMPANY.cage}`, right, 1.4, { align: "right" });
+  doc.text(`SAM UEI  ${COMPANY.uei}`, right, 1.55, { align: "right" });
   doc.text(`SAM.gov registered`, right, 1.7, { align: "right" });
 
   doc.setDrawColor(...RULE);
@@ -236,7 +236,6 @@ export function buildInvoicePDF({ invoice, customer, lines, paid_cents }) {
     { label: "Issue date", value: invoice.issue_date || "—" },
     { label: "Due date",   value: invoice.due_date || "—" },
     { label: "Terms",      value: terms ? `Net ${terms}` : "Due on receipt" },
-    { label: "Status",     value: invoice.status || "DRAFT" },
     { label: "PO ref",     value: invoice.po_number || "—" },
   ], { x: W - M - 2.2, y, w: 2.2 });
 
@@ -250,15 +249,14 @@ export function buildInvoicePDF({ invoice, customer, lines, paid_cents }) {
   const total = invoice.total_cents || subtotal + tax;
   const balance = Math.max(0, total - paid);
 
-  const totalRows = [
-    { label: "Subtotal", value: money(subtotal) },
-  ];
-  if (tax) totalRows.push({ label: "Tax", value: money(tax) });
+  const totalRows = [];
+  if (tax) {
+    totalRows.push({ label: "Subtotal", value: money(subtotal) });
+    totalRows.push({ label: "Tax",      value: money(tax) });
+  }
   totalRows.push({ label: "Total", value: money(total), bold: true });
   if (paid) {
-    totalRows.push({ label: "Paid", value: money(paid) });
-    totalRows.push({ label: "Balance due", value: money(balance), bold: true });
-  } else {
+    totalRows.push({ label: "Paid",        value: money(paid) });
     totalRows.push({ label: "Balance due", value: money(balance), bold: true });
   }
   y = totalsBlock(doc, totalRows, { y: y + 0.1, W, M });
