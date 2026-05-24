@@ -97,6 +97,10 @@ export default function PricingPage() {
                 · UEI <span className="font-mono text-ink">K4MZG4KC1MY9</span>.
               </p>
               <p className="mt-3 text-sm text-muted">
+                Certified <span className="text-ink">Woman Owned Small Business (WOSB)</span> —
+                eligible for WOSB / EDWOSB set-aside contracts.
+              </p>
+              <p className="mt-3 text-sm text-muted">
                 Available under simplified acquisition, micro-purchase, and BPA
                 vehicles. Net-30 terms standard on government POs.
               </p>

@@ -143,7 +143,7 @@ export default function NeuteredIPad() {
       <section className="container-xl pb-24">
         <Reveal>
           <div className="surface p-8 sm:p-10">
-            <div className="font-mono text-[10px] uppercase tracking-[0.18em] text-muted">SAM.gov registered</div>
+            <div className="font-mono text-[10px] uppercase tracking-[0.18em] text-muted">SAM.gov registered · Woman Owned Small Business</div>
             <div className="mt-3 grid gap-3 sm:grid-cols-3">
               <div>
                 <div className="text-xs text-muted">CAGE</div>

@@ -99,7 +99,7 @@ export default function HomePage() {
             <ul className="grid grid-cols-2 gap-x-4 gap-y-3 font-mono text-[11px] uppercase tracking-[0.12em] text-muted md:grid-cols-4">
               <li className="flex items-center gap-2 whitespace-nowrap"><CheckIcon size={14} className="text-accent shrink-0" /> US-based facility</li>
               <li className="flex items-center gap-2 whitespace-nowrap"><CheckIcon size={14} className="text-accent shrink-0" /> Background-checked</li>
-              <li className="flex items-center gap-2 whitespace-nowrap"><CheckIcon size={14} className="text-accent shrink-0" /> Chain of custody</li>
+              <li className="flex items-center gap-2 whitespace-nowrap"><CheckIcon size={14} className="text-accent shrink-0" /> Woman Owned Small Business</li>
               <li className="flex items-center gap-2 whitespace-nowrap"><CheckIcon size={14} className="text-accent shrink-0" /> SAM.gov · CAGE 14Y35</li>
             </ul>
           </div>
@@ -110,7 +110,7 @@ export default function HomePage() {
       <section className="container-xl pb-12">
         <Reveal>
           <div className="surface overflow-hidden">
-            <div className="grid items-center gap-px bg-ink/[0.08] sm:grid-cols-4">
+            <div className="grid items-center gap-px bg-ink/[0.08] sm:grid-cols-2 lg:grid-cols-5">
               <div className="bg-paper p-5 sm:p-6">
                 <div className="font-mono text-[10px] uppercase tracking-[0.18em] text-muted">SAM.gov</div>
                 <div className="mt-2 font-display text-base font-medium tracking-tight">Active registration</div>
@@ -130,6 +130,11 @@ export default function HomePage() {
                 <div className="font-mono text-[10px] uppercase tracking-[0.18em] text-muted">DUNS</div>
                 <div className="mt-2 font-display text-base font-medium tracking-tight">144834451</div>
                 <div className="mt-1 text-xs text-muted">D&amp;B identifier</div>
+              </div>
+              <div className="bg-paper p-5 sm:p-6">
+                <div className="font-mono text-[10px] uppercase tracking-[0.18em] text-muted">WOSB</div>
+                <div className="mt-2 font-display text-base font-medium tracking-tight">Woman Owned</div>
+                <div className="mt-1 text-xs text-muted">Small Business — set-aside eligible</div>
               </div>
             </div>
           </div>

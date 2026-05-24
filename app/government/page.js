@@ -5,12 +5,13 @@ import { ShieldIcon, CheckIcon, ArrowRightIcon } from "../../components/Icons";
 export const metadata = {
   title: "Government Contracting",
   description:
-    "CBR Labs LLC — SAM.gov registered, CAGE 14Y35, UEI K4MZG4KC1MY9. Hardware redaction for federal, state, and local government agencies. Net-30, micro-purchase, BPA-ready.",
+    "CBR Labs LLC — Woman Owned Small Business (WOSB), SAM.gov registered, CAGE 14Y35, UEI K4MZG4KC1MY9. Hardware redaction for federal, state, and local government agencies. Net-30, micro-purchase, BPA-ready.",
   alternates: { canonical: "/government" },
 };
 
 const facts = [
   ["SAM.gov", "Active registration", "Ready for federal award"],
+  ["Business classification", "Woman Owned Small Business", "WOSB / EDWOSB set-aside eligible"],
   ["CAGE", "14Y35", "Commercial & Government Entity"],
   ["UEI", "K4MZG4KC1MY9", "Unique Entity ID"],
   ["DUNS", "144834451", "Legacy D&B identifier"],
@@ -19,7 +20,7 @@ const facts = [
   ["NAICS (alt)", "334290", "Other Communications Equipment Mfg"],
   ["PSC", "J070", "Maint/Repair of ADP Equipment"],
   ["PSC", "7035", "ADP Support Equipment"],
-  ["Set-aside posture", "Small business", "Veteran-friendly procurement"],
+  ["Set-aside posture", "Small business · WOSB", "Woman Owned Small Business"],
 ];
 
 const vehicles = [
@@ -114,6 +115,10 @@ export default function GovernmentPage() {
                 <div>
                   <dt className="font-mono text-[10px] uppercase tracking-[0.14em] text-muted">UEI</dt>
                   <dd className="mt-1 font-mono text-ink break-all">K4MZG4KC1MY9</dd>
+                </div>
+                <div className="col-span-2">
+                  <dt className="font-mono text-[10px] uppercase tracking-[0.14em] text-muted">Classification</dt>
+                  <dd className="mt-1 text-ink">Woman Owned Small Business (WOSB)</dd>
                 </div>
                 <div className="col-span-2">
                   <dt className="font-mono text-[10px] uppercase tracking-[0.14em] text-muted">Address</dt>

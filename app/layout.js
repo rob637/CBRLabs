@@ -89,6 +89,10 @@ const orgJsonLd = {
     { "@type": "PropertyValue", propertyID: "UEI",  value: "K4MZG4KC1MY9" },
     { "@type": "PropertyValue", propertyID: "DUNS", value: "144834451" },
   ],
+  additionalProperty: [
+    { "@type": "PropertyValue", name: "Business classification", value: "Woman Owned Small Business (WOSB)" },
+    { "@type": "PropertyValue", name: "SAM.gov registration", value: "Active" },
+  ],
   description:
     "Hardware redaction services — permanent removal of cameras, microphones, and wireless radios from iPad and Android tablets.",
   areaServed: "US",

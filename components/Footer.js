@@ -69,6 +69,7 @@ export default function Footer() {
             <div><span className="text-ink/80">UEI</span> · K4MZG4KC1MY9</div>
             <div><span className="text-ink/80">DUNS</span> · 144834451</div>
             <div>SAM.gov registered · Active</div>
+            <div>Woman Owned Small Business (WOSB)</div>
             <div>5927 Tilbury Rd · Alexandria, VA 22310</div>
             <div>US-based facility · Background-checked</div>
           </div>
