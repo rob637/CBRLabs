@@ -28,9 +28,9 @@ const nav = {
 
 export default function Footer() {
   return (
-    <footer className="mt-24 px-3 pb-6">
+    <footer className="mt-10 px-3 pb-6">
       <div className="container-xl">
-        <div className="surface px-6 py-10 sm:px-10">
+        <div className="surface px-6 py-8 sm:px-10">
           <div className="grid gap-10 md:grid-cols-12">
             <div className="md:col-span-5">
               <Wordmark href={null} />
