@@ -65,7 +65,7 @@ export default function HomePage() {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }} />
 
       {/* HERO */}
-      <section className="container-xl pt-20 pb-16 sm:pt-28 sm:pb-20">
+      <section className="container-xl pt-16 pb-10 sm:pt-24 sm:pb-12">
         <Reveal>
           <div className="eyebrow">Hardware redaction · iPad &amp; Android</div>
         </Reveal>
@@ -95,7 +95,7 @@ export default function HomePage() {
 
         {/* Trust strip */}
         <Reveal delay={320}>
-          <div className="mt-14 surface px-5 py-4 sm:px-6">
+          <div className="mt-10 surface px-5 py-4 sm:px-6">
             <ul className="grid grid-cols-2 gap-x-4 gap-y-3 font-mono text-[11px] uppercase tracking-[0.12em] text-muted md:grid-cols-4">
               <li className="flex items-center gap-2 whitespace-nowrap"><CheckIcon size={14} className="text-accent shrink-0" /> US-based facility</li>
               <li className="flex items-center gap-2 whitespace-nowrap"><CheckIcon size={14} className="text-accent shrink-0" /> Background-checked</li>
@@ -107,7 +107,7 @@ export default function HomePage() {
       </section>
 
       {/* FEDERAL CREDENTIALS — visible above the fold for gov buyers */}
-      <section className="container-xl pb-12">
+      <section className="container-xl pb-8">
         <Reveal>
           <div className="surface overflow-hidden">
             <div className="grid items-center gap-px bg-ink/[0.08] sm:grid-cols-2 lg:grid-cols-5">
@@ -142,7 +142,7 @@ export default function HomePage() {
       </section>
 
       {/* HERO FIGURE */}
-      <section className="container-xl pb-16 sm:pb-20">
+      <section className="container-xl pb-12 sm:pb-16">
         <Reveal>
           <figure className="brand-figure aspect-[16/9] sm:aspect-[21/9]">
             <Image
@@ -159,7 +159,7 @@ export default function HomePage() {
       </section>
 
       {/* STATS */}
-      <section className="container-xl pb-20">
+      <section className="container-xl pb-16">
         <div className="surface overflow-hidden">
           <div className="grid grid-cols-2 md:grid-cols-4">
             {stats.map((s, i) => (
@@ -176,7 +176,7 @@ export default function HomePage() {
       </section>
 
       {/* CAPABILITIES */}
-      <section className="container-xl py-24">
+      <section className="container-xl py-20">
         <div className="grid gap-12 lg:grid-cols-12">
           <div className="lg:col-span-5">
             <Reveal><div className="eyebrow">What we remove</div></Reveal>
@@ -216,7 +216,7 @@ export default function HomePage() {
       </section>
 
       {/* FAQ */}
-      <section className="container-xl py-24">
+      <section className="container-xl py-20">
         <Reveal><div className="eyebrow">Frequently asked</div></Reveal>
         <Reveal delay={80}>
           <h2 className="mt-6 max-w-3xl font-display text-4xl font-medium tracking-tightest sm:text-5xl">
@@ -240,7 +240,7 @@ export default function HomePage() {
       </section>
 
       {/* CTA */}
-      <section className="container-xl py-24">
+      <section className="container-xl py-20">
         <Reveal>
           <div className="surface relative overflow-hidden p-10 sm:p-16">
             <div className="grid items-center gap-8 lg:grid-cols-12">
