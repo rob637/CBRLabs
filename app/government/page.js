@@ -5,7 +5,7 @@ import { ShieldIcon, CheckIcon, ArrowRightIcon } from "../../components/Icons";
 export const metadata = {
   title: "Government Contracting",
   description:
-    "CBR Labs LLC — Woman Owned Small Business (WOSB), SAM.gov registered, CAGE 14Y35, UEI K4MZG4KC1MY9. Hardware redaction for federal, state, and local government agencies. Net-30, micro-purchase, BPA-ready.",
+    "CBR Labs LLC — Woman Owned Small Business (WOSB), SAM.gov registered, CAGE 14Y35, UEI K4MZG4KC1MY9. Hardware redaction for federal, state, and local government agencies. Net-30, BPA-ready.",
   alternates: { canonical: "/government" },
 };
 
@@ -25,8 +25,8 @@ const facts = [
 
 const vehicles = [
   {
-    h: "Micro-purchase ($10K and under)",
-    p: "Government purchase card accepted. Quote → PO → ship in days, not months. Ideal for single-courtroom or single-unit pilots.",
+    h: "Small orders ($10K and under)",
+    p: "Quote → PO → ship in days, not months. Ideal for single-courtroom or single-unit pilots. Payment by check, ACH, or wire on Net-30 terms.",
   },
   {
     h: "Simplified acquisition ($10K – $250K)",

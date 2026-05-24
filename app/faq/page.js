@@ -98,10 +98,6 @@ const sections = [
         a: "Yes. Active registration. CAGE 14Y35. UEI K4MZG4KC1MY9. See the Government Contracting page for the full quick card for your contracting officer.",
       },
       {
-        q: "Do you accept government purchase cards?",
-        a: "Yes — for micro-purchase orders ($10K and under).",
-      },
-      {
         q: "Do you work under BPA or IDIQ vehicles?",
         a: "Yes. We honor agency BPAs with established ceiling and rates, and accept call orders against IDIQ contracts.",
       },
