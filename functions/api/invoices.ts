@@ -70,12 +70,18 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => han
   const total = subtotal + tax;
   const invoiceNumber = await mintInvoiceNumber(env.DB);
 
+  // Always Net 30 — due date is computed from issue date (today), not user-entered.
+  const issueDate = new Date().toISOString().slice(0, 10);
+  const dueObj = new Date(issueDate + "T00:00:00Z");
+  dueObj.setUTCDate(dueObj.getUTCDate() + 30);
+  const dueDate = dueObj.toISOString().slice(0, 10);
+
   const inv = await env.DB
     .prepare(`INSERT INTO invoices
-      (invoice_number, customer_id, po_id, status, due_date, subtotal_cents, tax_cents, total_cents, notes)
-      VALUES (?1, ?2, ?3, 'DRAFT', ?4, ?5, ?6, ?7, ?8)
+      (invoice_number, customer_id, po_id, status, issue_date, due_date, subtotal_cents, tax_cents, total_cents, notes)
+      VALUES (?1, ?2, ?3, 'DRAFT', ?4, ?5, ?6, ?7, ?8, ?9)
       RETURNING id`)
-    .bind(invoiceNumber, body.customer_id, body.po_id || null, body.due_date || null,
+    .bind(invoiceNumber, body.customer_id, body.po_id || null, issueDate, dueDate,
           subtotal, tax, total, body.notes || null)
     .first<{ id: number }>();
 

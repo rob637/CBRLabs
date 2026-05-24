@@ -105,22 +105,13 @@ function InvoiceForm({ customers, pos, onSaved }) {
   const [customerId, setCustomerId] = useState("");
   const [poId, setPoId] = useState("");
   const [fromPo, setFromPo] = useState(true);
-  const [issueDate, setIssueDate] = useState(new Date().toISOString().slice(0, 10));
-  const [dueDate, setDueDate] = useState(() => {
+
+  const issueDate = new Date().toISOString().slice(0, 10);
+  const dueDate = (() => {
     const d = new Date();
     d.setDate(d.getDate() + 30);
     return d.toISOString().slice(0, 10);
-  });
-
-  // Keep due date locked to issue + 30 unless the user manually edits it.
-  const [dueTouched, setDueTouched] = useState(false);
-  useEffect(() => {
-    if (dueTouched || !issueDate) return;
-    const d = new Date(issueDate + "T00:00:00");
-    if (isNaN(d.getTime())) return;
-    d.setDate(d.getDate() + 30);
-    setDueDate(d.toISOString().slice(0, 10));
-  }, [issueDate, dueTouched]);
+  })();
 
   async function submit(e) {
     e.preventDefault();
@@ -130,8 +121,6 @@ function InvoiceForm({ customers, pos, onSaved }) {
         customer_id: Number(customerId) || null,
         po_id: poId ? Number(poId) : null,
         from_po: poId ? fromPo : false,
-        issue_date: issueDate || null,
-        due_date: dueDate || null,
       });
       onSaved();
     } catch (e) { setErr(e.message); } finally { setBusy(false); }
@@ -157,16 +146,16 @@ function InvoiceForm({ customers, pos, onSaved }) {
           {filteredPos.map((p) => <option key={p.id} value={p.id}>{p.po_number}</option>)}
         </select>
       </label>
-      <label className="text-sm">
-        <span className="eyebrow">Issue date</span>
-        <input type="date" value={issueDate} onChange={(e) => setIssueDate(e.target.value)}
-          className="mt-1 w-full rounded border hairline bg-paper px-3 py-2" />
-      </label>
-      <label className="text-sm">
-        <span className="eyebrow">Due date</span>
-        <input type="date" value={dueDate} onChange={(e) => { setDueTouched(true); setDueDate(e.target.value); }}
-          className="mt-1 w-full rounded border hairline bg-paper px-3 py-2" />
-      </label>
+      <div className="sm:col-span-2 rounded border hairline bg-paper/60 px-3 py-2 text-xs text-muted">
+        <span className="eyebrow text-[10px]">Terms</span>
+        <span className="ml-2 font-mono text-ink">Net 30</span>
+        <span className="mx-2">·</span>
+        <span className="eyebrow text-[10px]">Issue</span>
+        <span className="ml-2 font-mono text-ink">{issueDate}</span>
+        <span className="mx-2">·</span>
+        <span className="eyebrow text-[10px]">Due</span>
+        <span className="ml-2 font-mono text-ink">{dueDate}</span>
+      </div>
       {poId ? (
         <label className="text-sm sm:col-span-2 inline-flex items-center gap-2">
           <input type="checkbox" checked={fromPo} onChange={(e) => setFromPo(e.target.checked)} />

@@ -229,14 +229,20 @@ export function buildInvoicePDF({ invoice, customer, lines, paid_cents }) {
     billY += 0.17;
   }
 
-  // Meta block (right column) — default to Net 30 when no due date present
-  const computedTerms = invoice.terms || (invoice.due_date && invoice.issue_date
-    ? daysBetween(invoice.issue_date, invoice.due_date) : null);
-  const termsLabel = computedTerms ? `Net ${computedTerms}` : "Net 30";
+  // Meta block (right column) — Net 30 is canonical. Due date is always computed
+  // from issue date so it stays consistent regardless of what was stored.
+  let dueDisplay = invoice.due_date || "";
+  if (invoice.issue_date) {
+    try {
+      const d = new Date(invoice.issue_date + "T00:00:00Z");
+      d.setUTCDate(d.getUTCDate() + 30);
+      dueDisplay = d.toISOString().slice(0, 10);
+    } catch {}
+  }
   metaBlock(doc, [
     { label: "Issue date", value: invoice.issue_date || "\u2014" },
-    { label: "Due date",   value: invoice.due_date || "\u2014" },
-    { label: "Terms",      value: termsLabel },
+    { label: "Due date",   value: dueDisplay || "\u2014" },
+    { label: "Terms",      value: "Net 30" },
     { label: "PO ref",     value: invoice.po_number || "\u2014" },
   ], { x: W - M - 2.2, y, w: 2.2 });
 
@@ -277,7 +283,7 @@ export function buildInvoicePDF({ invoice, customer, lines, paid_cents }) {
   doc.text("AMOUNT DUE", bandX + 0.18, y + 0.2);
   doc.setFont("helvetica", "normal");
   doc.setFontSize(7);
-  doc.text(`Due ${invoice.due_date || "on receipt"}`, bandX + 0.18, y + 0.36);
+  doc.text(`Due ${dueDisplay || "on receipt"}`, bandX + 0.18, y + 0.36);
   doc.setFont("helvetica", "bold");
   doc.setFontSize(16);
   doc.setTextColor(...INK);
