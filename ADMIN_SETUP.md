@@ -109,3 +109,116 @@ If all 6 steps pass, you're live.
 ### If anything goes wrong
 
 Re-run the build by pushing any commit (even an empty one) — Pages rebuilds in ~60 seconds. The admin UI shows a useful error message instead of a blank screen if a binding is missing.
+
+---
+
+# DNS + Email Notifications — paused mid-session (resume here)
+
+**Critical context discovered:** `cbr-labs.com` is still pointing at the OLD Apache/GoDaddy site, NOT the new Cloudflare Pages app. Until DNS is moved, the contact form on the apex domain is going to the dead site and `cbr-labs.com/admin/leads` 404s. The new app only works at `cbr-labs.pages.dev`.
+
+- Domain registrar: **GoDaddy**
+- Current nameservers: `ns73.domaincontrol.com`, `ns74.domaincontrol.com` (GoDaddy)
+- Current `A` record: `208.109.65.209` (GoDaddy shared hosting / Apache)
+- GoDaddy account email shown in dashboard: `joleuterio@sagecg.com`
+- Hosting product: GoDaddy cPanel
+
+Email situation is **unknown** — must be checked before touching nameservers. The GoDaddy dashboard shows an Email panel; need to confirm whether `rob@cbr-labs.com` or any other `@cbr-labs.com` mailbox exists and where MX records point.
+
+---
+
+## STEP 1 — Repoint `cbr-labs.com` to Cloudflare Pages
+
+### 1a. Check what email is hosted on the domain (do this FIRST)
+1. https://dashboard.godaddy.com → left sidebar **Email** → screenshot the page.
+2. Note any mailboxes (e.g. `rob@cbr-labs.com`, `info@cbr-labs.com`) and any forwarding rules.
+3. Also note in GoDaddy DNS what the current MX records are — these MUST be preserved when nameservers move.
+
+### 1b. Add the domain to Cloudflare (SAFE — does not affect live site yet)
+1. https://dash.cloudflare.com → top right **Add a domain** → type `cbr-labs.com` → Free plan → Continue.
+2. Cloudflare scans GoDaddy's existing records and shows them. **Verify these are present before continuing:**
+   - All `MX` records for email
+   - `TXT` records (SPF `v=spf1...`, DKIM, DMARC, any Google/Microsoft verification strings)
+   - `A` record for `cbr-labs.com` (currently `208.109.65.209`)
+   - `CNAME` records for `www`, `mail`, `email`, `cpanel`, `webmail`, etc.
+3. If anything is missing, add it manually in Cloudflare DNS before proceeding.
+4. Cloudflare will then display **two assigned nameservers** like `ada.ns.cloudflare.com` + `bob.ns.cloudflare.com`. Copy both.
+
+### 1c. Switch nameservers at GoDaddy
+1. https://dashboard.godaddy.com → **Domain** → click `cbr-labs.com` → **Manage DNS** (or three-dot menu → Manage DNS).
+2. Scroll to **Nameservers** → **Change**.
+3. Choose **I'll use my own nameservers** → delete the two GoDaddy ones → paste Cloudflare's two → Save.
+4. GoDaddy sends a confirmation email. Activation takes 5 min – 1 hour.
+
+### 1d. Attach domain to Pages project
+1. Cloudflare dashboard → **Workers & Pages** → click `cbr-labs` project → **Custom domains** tab → **Set up a custom domain**.
+2. Enter `cbr-labs.com` → Continue → Activate. Repeat for `www.cbr-labs.com`.
+3. Both rows should show **Active** within a few minutes once nameservers are live.
+
+### 1e. Verify
+```bash
+curl -sI https://cbr-labs.com/ | grep -iE 'server|cf-ray'
+```
+Want to see `server: cloudflare`. Then `https://cbr-labs.com/admin/leads/` should show the Cloudflare Access login, not 404.
+
+### 1f. Old hosting cleanup
+Once cbr-labs.com is verified pointing at Pages:
+- Old GoDaddy hosting can be cancelled at next renewal.
+- **Before cancelling**, log into the old cPanel and check the contact-form inbox / submissions for any stranded leads from before the switch.
+
+---
+
+## STEP 2 — Wire up Resend email notifications
+
+Code is already shipped (`functions/public/leads.ts`). It's dormant until `RESEND_API_KEY` is set in Cloudflare Pages env vars. Once the key is set, every contact-form submission emails `rob@cbr-labs.com` with the submitter as Reply-To.
+
+### 2a. Sign up at Resend
+https://resend.com — free plan: 3,000 emails/month, 100/day.
+
+### 2b. Verify `cbr-labs.com` in Resend
+1. Resend dashboard → **Domains** → **Add Domain** → `cbr-labs.com` → US East region.
+2. Resend shows 3 DNS records to add (SPF TXT, DKIM TXT/CNAME, DMARC TXT).
+3. In Cloudflare → `cbr-labs.com` → **DNS** → add each record exactly as Resend specified. **Proxy OFF (grey cloud)** for all three.
+4. Click **Verify DNS Records** in Resend. All three should turn green.
+
+### 2c. Create API key
+1. Resend → **API Keys** → **Create API Key** → name: `cbr-labs-pages` → permission: **Sending access** → domain: `cbr-labs.com`.
+2. Copy the key (`re_...`) — only shown once.
+
+### 2d. Add key to Cloudflare Pages
+1. Cloudflare → Pages project `cbr-labs` → **Settings** → **Variables and Secrets** → **Production**.
+2. Add variable:
+   - Name: `RESEND_API_KEY`
+   - Value: `re_...`
+   - Type: **Secret** (encrypted)
+3. (Optional overrides — plain text, not secrets):
+   - `LEADS_TO_EMAIL` — default `rob@cbr-labs.com`. To send to multiple recipients, code currently only accepts one address; ask Claude to add comma-list support.
+   - `LEADS_FROM_EMAIL` — default `CBR Labs <no-reply@cbr-labs.com>`. Must use a verified domain.
+
+### 2e. Redeploy so env vars load
+Cloudflare → Pages project → Deployments → latest → ⋯ → **Retry deployment**. (Or push any commit.)
+
+### 2f. Test
+1. Submit the form at `https://cbr-labs.com/contact/` with a real name + your own email.
+2. Email should arrive at `rob@cbr-labs.com` within seconds.
+3. The row should also appear in `https://cbr-labs.com/admin/leads/`.
+4. If no email arrives within 2 min: Cloudflare → Pages project → Deployments → latest → **Functions logs** → search for `lead email failed:` — the error tells you what's wrong.
+
+---
+
+## Open question for next session
+User said: "all emails should go to rob@cbr-labs.com or rob@sagecg.com no leads@cbr-labs.com".
+- FROM default is fixed: `no-reply@cbr-labs.com` (committed in `0dc2870`).
+- TO default is `rob@cbr-labs.com`. If both addresses are wanted, modify `sendLeadEmail()` in `functions/public/leads.ts` so `LEADS_TO_EMAIL` accepts a comma-separated list and is split into `to: [...]` for Resend.
+
+## Quick checklist
+- [ ] Screenshotted GoDaddy email settings
+- [ ] Added cbr-labs.com to Cloudflare, verified all DNS records imported
+- [ ] Switched nameservers at GoDaddy
+- [ ] Added `cbr-labs.com` + `www.cbr-labs.com` as Pages custom domains
+- [ ] `curl -sI https://cbr-labs.com/` returns `server: cloudflare`
+- [ ] `https://cbr-labs.com/admin/leads/` shows Access login
+- [ ] Resend domain verified (3 DNS records green)
+- [ ] `RESEND_API_KEY` secret added to Pages production
+- [ ] Retried deployment after adding key
+- [ ] Test submission delivered to rob@cbr-labs.com
+- [ ] Checked old GoDaddy cPanel inbox for stranded leads
