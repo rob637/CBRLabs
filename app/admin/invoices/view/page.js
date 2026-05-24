@@ -105,18 +105,33 @@ function Stat({ label, value, accent }) {
   );
 }
 
+function centsToDollarStr(c) {
+  const n = Number(c) || 0;
+  return (n / 100).toFixed(2);
+}
+function dollarStrToCents(s) {
+  const n = parseFloat(String(s).replace(/[^0-9.\-]/g, ""));
+  if (!isFinite(n)) return 0;
+  return Math.round(n * 100);
+}
+
 function LineEditor({ invoiceId, lines: initial, onSaved }) {
-  const [lines, setLines] = useState(initial || []);
+  // Internal line shape: { description, quantity, _price_dollars (string for input), unit_price_cents }
+  const toEditable = (ls) => (ls || []).map((l) => ({
+    ...l,
+    _price_dollars: centsToDollarStr(l.unit_price_cents),
+  }));
+  const [lines, setLines] = useState(toEditable(initial));
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState(null);
 
-  useEffect(() => { setLines(initial || []); }, [initial]);
+  useEffect(() => { setLines(toEditable(initial)); }, [initial]);
 
   function update(i, patch) {
     setLines((ls) => ls.map((l, idx) => idx === i ? { ...l, ...patch } : l));
   }
   function add() {
-    setLines((ls) => [...ls, { description: "", quantity: 1, unit_price_cents: 0 }]);
+    setLines((ls) => [...ls, { description: "", quantity: 1, unit_price_cents: 0, _price_dollars: "0.00" }]);
   }
   function remove(i) {
     setLines((ls) => ls.filter((_, idx) => idx !== i));
@@ -130,7 +145,7 @@ function LineEditor({ invoiceId, lines: initial, onSaved }) {
           position: i,
           description: l.description,
           quantity: Number(l.quantity) || 1,
-          unit_price_cents: Number(l.unit_price_cents) || 0,
+          unit_price_cents: dollarStrToCents(l._price_dollars),
         })),
       });
       onSaved();
@@ -145,16 +160,17 @@ function LineEditor({ invoiceId, lines: initial, onSaved }) {
       </div>
       <div className="mt-3 space-y-2">
         {lines.map((l, i) => {
-          const amt = (Number(l.quantity) || 0) * (Number(l.unit_price_cents) || 0);
+          const priceCents = dollarStrToCents(l._price_dollars);
+          const amt = (Number(l.quantity) || 0) * priceCents;
           return (
             <div key={i} className="grid gap-2 sm:grid-cols-[1fr,80px,140px,120px,40px] items-center">
               <input value={l.description || ""} onChange={(e) => update(i, { description: e.target.value })}
                 placeholder="Description"
                 className="rounded border hairline bg-paper px-2 py-1.5 text-sm" />
-              <input type="number" step="1" value={l.quantity ?? 1} onChange={(e) => update(i, { quantity: e.target.value })}
+              <input type="number" step="1" min="1" value={l.quantity ?? 1} onChange={(e) => update(i, { quantity: e.target.value })}
                 className="rounded border hairline bg-paper px-2 py-1.5 text-sm font-mono text-right" />
-              <input type="number" step="1" value={l.unit_price_cents ?? 0} onChange={(e) => update(i, { unit_price_cents: e.target.value })}
-                placeholder="cents"
+              <input type="number" step="0.01" min="0" value={l._price_dollars} onChange={(e) => update(i, { _price_dollars: e.target.value })}
+                placeholder="0.00"
                 className="rounded border hairline bg-paper px-2 py-1.5 text-sm font-mono text-right" />
               <div className="font-mono text-xs text-right">{formatMoney(amt)}</div>
               <button onClick={() => remove(i)} className="text-muted hover:text-red-700">×</button>
