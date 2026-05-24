@@ -142,7 +142,7 @@ export default function HomePage() {
       </section>
 
       {/* HERO FIGURE */}
-      <section className="container-xl pb-10 sm:pb-12">
+      <section className="container-xl pb-8 sm:pb-10">
         <Reveal>
           <figure className="brand-figure aspect-[16/9] sm:aspect-[21/9]">
             <Image
@@ -159,7 +159,7 @@ export default function HomePage() {
       </section>
 
       {/* STATS */}
-      <section className="container-xl pb-12">
+      <section className="container-xl pb-8">
         <div className="surface overflow-hidden">
           <div className="grid grid-cols-2 md:grid-cols-4">
             {stats.map((s, i) => {
@@ -179,7 +179,7 @@ export default function HomePage() {
       </section>
 
       {/* CAPABILITIES */}
-      <section className="container-xl py-16">
+      <section className="container-xl py-10 sm:py-12">
         <div className="grid gap-12 lg:grid-cols-12">
           <div className="lg:col-span-5">
             <Reveal><div className="eyebrow">What we remove</div></Reveal>
@@ -219,7 +219,7 @@ export default function HomePage() {
       </section>
 
       {/* FAQ */}
-      <section className="container-xl py-16">
+      <section className="container-xl py-10 sm:py-12">
         <Reveal><div className="eyebrow">Frequently asked</div></Reveal>
         <Reveal delay={80}>
           <h2 className="mt-6 max-w-3xl font-display text-4xl font-medium tracking-tightest sm:text-5xl">
@@ -243,9 +243,9 @@ export default function HomePage() {
       </section>
 
       {/* CTA */}
-      <section className="container-xl py-16">
+      <section className="container-xl py-10 sm:py-12">
         <Reveal>
-          <div className="surface relative overflow-hidden p-10 sm:p-16">
+          <div className="surface relative overflow-hidden p-8 sm:p-12">
             <div className="grid items-center gap-8 lg:grid-cols-12">
               <div className="lg:col-span-8">
                 <div className="eyebrow">Get started</div>
