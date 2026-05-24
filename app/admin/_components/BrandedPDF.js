@@ -179,6 +179,7 @@ export function buildInvoicePDF({ invoice, customer, lines, paid_cents }) {
     docNumber: invoice.invoice_number || `#${invoice.id}`,
   });
   let y = y0;
+  const paid = paid_cents ?? invoice.paid_cents ?? 0;
 
   // Bill To
   doc.setFont("helvetica", "bold");
@@ -189,8 +190,23 @@ export function buildInvoicePDF({ invoice, customer, lines, paid_cents }) {
   doc.setFontSize(10);
   doc.setTextColor(...INK);
   doc.text(customer?.name || "—", M, y + 0.22);
-  if (customer?.contact_name) doc.text(customer.contact_name, M, y + 0.4);
-  if (customer?.email) doc.text(customer.email, M, y + 0.56);
+  let billY = y + 0.4;
+  if (customer?.billing_address) {
+    const addrLines = String(customer.billing_address).split(/\r?\n/);
+    doc.setFontSize(9);
+    doc.setTextColor(...MUTED);
+    for (const ln of addrLines) {
+      doc.text(ln, M, billY);
+      billY += 0.16;
+    }
+    doc.setFontSize(10);
+    doc.setTextColor(...INK);
+  }
+  if (customer?.email) {
+    doc.setFontSize(9);
+    doc.setTextColor(...MUTED);
+    doc.text(customer.email, M, billY);
+  }
 
   // Meta block (right)
   metaBlock(doc, [
@@ -207,13 +223,13 @@ export function buildInvoicePDF({ invoice, customer, lines, paid_cents }) {
   const subtotal = invoice.subtotal_cents || 0;
   const tax = invoice.tax_cents || 0;
   const total = invoice.total_cents || subtotal + tax;
-  const balance = Math.max(0, total - (paid_cents || 0));
+  const balance = Math.max(0, total - paid);
 
   y = totalsBlock(doc, [
     { label: "Subtotal", value: money(subtotal) },
     { label: "Tax",      value: money(tax) },
     { label: "Total",    value: money(total), bold: true },
-    { label: "Paid",     value: money(paid_cents || 0) },
+    { label: "Paid",     value: money(paid) },
     { label: "Balance",  value: money(balance), bold: true },
   ], { y: y + 0.1, W, M });
 

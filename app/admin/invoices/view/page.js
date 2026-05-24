@@ -24,41 +24,69 @@ function InvoiceView() {
   const load = () => api.get(`/api/invoices/${id}`).then(setData).catch((e) => setErr(e.message));
   useEffect(() => { if (id) load(); }, [id]);
 
+  // The API returns customer fields flattened onto the invoice row.
+  const customer = data ? {
+    name:            data.invoice?.customer_name,
+    email:           data.invoice?.customer_email,
+    billing_address: data.invoice?.billing_address,
+  } : null;
+
   async function downloadPDF() {
     const doc = buildInvoicePDF({
-      invoice: data.invoice,
-      customer: data.customer,
+      invoice: { ...data.invoice, paid_cents: data.receipts?.reduce((s, r) => s + (r.amount_cents || 0), 0) || 0 },
+      customer,
       lines: data.lines,
-      paid_cents: data.paid_cents || 0,
     });
     downloadDoc(doc, `${data.invoice.invoice_number || `invoice-${data.invoice.id}`}.pdf`);
   }
 
-  async function markSent() {
-    await api.patch(`/api/invoices/${id}`, { status: "SENT" });
+  async function setStatus(next) {
+    await api.patch(`/api/invoices/${id}`, { status: next });
     load();
   }
 
   if (err) return <div className="surface p-4 text-sm text-red-700">{err}</div>;
   if (!data) return <div className="text-sm text-muted">Loading…</div>;
   const inv = data.invoice;
-  const paid = data.paid_cents || 0;
+  const paid = data.receipts?.reduce((s, r) => s + (r.amount_cents || 0), 0) || 0;
   const balance = Math.max(0, (inv.total_cents || 0) - paid);
+
+  // Allowed next states from current status
+  const nextStates = ({
+    DRAFT:   ["SENT", "VOID"],
+    SENT:    ["DRAFT", "VOID"],
+    PARTIAL: ["VOID"],
+    PAID:    [],
+    VOID:    ["DRAFT"],
+  })[inv.status] || [];
 
   return (
     <div>
       <PageHeader
         eyebrow="Admin · Invoice"
         title={inv.invoice_number || `#${inv.id}`}
-        sub={`${data.customer?.name || ""} · ${inv.status}`}
+        sub={`${customer?.name || "—"} · ${inv.status}`}
         actions={
           <div className="flex gap-2">
             <button onClick={downloadPDF} className="btn-accent">Download PDF</button>
-            {inv.status === "DRAFT" ? <button onClick={markSent} className="btn-ghost">Mark sent</button> : null}
+            {nextStates.map((s) => (
+              <button key={s} onClick={() => setStatus(s)} className="btn-ghost">
+                {s === "SENT" ? "Mark sent" : s === "VOID" ? "Void" : s === "DRAFT" ? "Reopen" : `Mark ${s.toLowerCase()}`}
+              </button>
+            ))}
             <Link href={`/admin/receipts?invoice_id=${inv.id}`} className="btn-ghost">+ Receipt</Link>
           </div>
         }
       />
+
+      <div className="mt-4 surface p-4 text-sm">
+        <div className="eyebrow mb-2">Bill to</div>
+        <div className="font-medium">{customer?.name || "—"}</div>
+        {customer?.billing_address ? (
+          <div className="whitespace-pre-line text-muted">{customer.billing_address}</div>
+        ) : null}
+        {customer?.email ? <div className="text-muted">{customer.email}</div> : null}
+      </div>
 
       <div className="mt-6 grid gap-4 sm:grid-cols-3">
         <Stat label="Total" value={formatMoney(inv.total_cents)} />
