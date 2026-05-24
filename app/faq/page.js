@@ -61,7 +61,7 @@ const sections = [
       },
       {
         q: "What does it cost?",
-        a: "Per-device pricing scales with volume. See the published tiers on the Pricing page. Final quotes are always written and include guaranteed lead time.",
+        a: "Per-device pricing scales with volume. Final quotes are always written and include guaranteed lead time — contact us with your platform, models, and quantities for a quote.",
       },
       {
         q: "Will this void the manufacturer warranty?",

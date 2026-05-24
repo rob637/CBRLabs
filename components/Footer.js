@@ -5,7 +5,6 @@ const nav = {
   Services: [
     ["iPad redaction", "/services"],
     ["Android tablet redaction", "/services"],
-    ["Pricing", "/pricing"],
     ["Security & custody", "/security"],
     ["Process", "/process"],
     ["Compliance", "/compliance"],
