@@ -125,36 +125,36 @@ export function lineTable(doc, lines, { y, M, W }) {
   const colAmt  = W - M;
 
   doc.setFillColor(245, 244, 240);
-  doc.rect(M, y, W - M * 2, 0.32, "F");
+  doc.rect(M, y, W - M * 2, 0.36, "F");
   doc.setFont("helvetica", "bold");
   doc.setFontSize(8);
   doc.setTextColor(...MUTED);
-  doc.text("DESCRIPTION", colDesc + 0.1, y + 0.21);
-  doc.text("QTY",   colQty, y + 0.21, { align: "right" });
-  doc.text("UNIT",  colUnit, y + 0.21, { align: "right" });
-  doc.text("AMOUNT", colAmt - 0.05, y + 0.21, { align: "right" });
-  y += 0.42;
+  doc.text("DESCRIPTION", colDesc + 0.1, y + 0.23);
+  doc.text("QTY",   colQty, y + 0.23, { align: "right" });
+  doc.text("UNIT",  colUnit, y + 0.23, { align: "right" });
+  doc.text("AMOUNT", colAmt - 0.05, y + 0.23, { align: "right" });
+  y += 0.52;
 
   doc.setFont("helvetica", "normal");
-  doc.setFontSize(9);
+  doc.setFontSize(10);
   doc.setTextColor(...INK);
   for (const l of lines) {
     const wrapped = doc.splitTextToSize(l.description || "", colQty - colDesc - 0.2);
-    const lineH = Math.max(0.22, wrapped.length * 0.16);
+    const lineH = Math.max(0.28, wrapped.length * 0.18);
     doc.text(wrapped, colDesc + 0.1, y);
     doc.text(String(l.quantity ?? 1), colQty, y, { align: "right" });
     doc.text(money(l.unit_price_cents), colUnit, y, { align: "right" });
     doc.text(money(l.amount_cents), colAmt - 0.05, y, { align: "right" });
-    y += lineH + 0.06;
+    y += lineH + 0.1;
     doc.setDrawColor(...RULE);
     doc.setLineWidth(0.003);
-    doc.line(M, y - 0.04, W - M, y - 0.04);
+    doc.line(M, y - 0.06, W - M, y - 0.06);
   }
-  return y + 0.1;
+  return y + 0.15;
 }
 
 export function totalsBlock(doc, rows, { y, W, M }) {
-  doc.setFontSize(9);
+  doc.setFontSize(10);
   const labelX = W - M - 1.5;
   const valX   = W - M - 0.05;
   for (const r of rows) {
@@ -163,7 +163,7 @@ export function totalsBlock(doc, rows, { y, W, M }) {
     doc.text(r.label.toUpperCase(), labelX, y, { align: "right" });
     doc.setTextColor(...INK);
     doc.text(r.value, valX, y, { align: "right" });
-    y += r.bold ? 0.28 : 0.22;
+    y += r.bold ? 0.3 : 0.24;
   }
   return y;
 }
@@ -198,49 +198,50 @@ export function buildInvoicePDF({ invoice, customer, lines, paid_cents }) {
   doc.text("BILL TO", M, y);
 
   doc.setFont("helvetica", "bold");
-  doc.setFontSize(11);
+  doc.setFontSize(12);
   doc.setTextColor(...INK);
-  doc.text(customer?.name || "—", M, y + 0.24);
+  doc.text(customer?.name || "\u2014", M, y + 0.28);
 
-  let billY = y + 0.44;
+  let billY = y + 0.5;
+  if (customer?.org && customer.org !== customer.name) {
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(10);
+    doc.setTextColor(...INK);
+    doc.text(String(customer.org), M, billY);
+    billY += 0.2;
+  }
   doc.setFont("helvetica", "normal");
   doc.setFontSize(9);
-  doc.setTextColor(...INK);
-  if (customer?.org && customer.org !== customer.name) {
-    doc.text(String(customer.org), M, billY);
-    billY += 0.16;
-  }
+  doc.setTextColor(...MUTED);
   if (customer?.billing_address) {
     const addrLines = String(customer.billing_address).split(/\r?\n/).map((s) => s.trim()).filter(Boolean);
-    doc.setTextColor(...MUTED);
     for (const ln of addrLines) {
       doc.text(ln, M, billY);
-      billY += 0.16;
+      billY += 0.17;
     }
   }
   if (customer?.email) {
-    doc.setTextColor(...MUTED);
     doc.text(customer.email, M, billY);
-    billY += 0.16;
+    billY += 0.17;
   }
   if (customer?.phone) {
-    doc.setTextColor(...MUTED);
     doc.text(customer.phone, M, billY);
-    billY += 0.16;
+    billY += 0.17;
   }
 
-  // Meta block (right column)
-  const terms = invoice.terms || (invoice.due_date && invoice.issue_date
+  // Meta block (right column) — default to Net 30 when no due date present
+  const computedTerms = invoice.terms || (invoice.due_date && invoice.issue_date
     ? daysBetween(invoice.issue_date, invoice.due_date) : null);
+  const termsLabel = computedTerms ? `Net ${computedTerms}` : "Net 30";
   metaBlock(doc, [
-    { label: "Issue date", value: invoice.issue_date || "—" },
-    { label: "Due date",   value: invoice.due_date || "—" },
-    { label: "Terms",      value: terms ? `Net ${terms}` : "Due on receipt" },
-    { label: "PO ref",     value: invoice.po_number || "—" },
+    { label: "Issue date", value: invoice.issue_date || "\u2014" },
+    { label: "Due date",   value: invoice.due_date || "\u2014" },
+    { label: "Terms",      value: termsLabel },
+    { label: "PO ref",     value: invoice.po_number || "\u2014" },
   ], { x: W - M - 2.2, y, w: 2.2 });
 
-  // Move below whichever column is taller
-  y = Math.max(billY + 0.1, y + 1.4);
+  // Move below whichever column is taller, with generous breathing room
+  y = Math.max(billY + 0.35, y + 1.7);
 
   y = lineTable(doc, lines, { y, M, W });
 
@@ -256,26 +257,58 @@ export function buildInvoicePDF({ invoice, customer, lines, paid_cents }) {
   }
   totalRows.push({ label: "Total", value: money(total), bold: true });
   if (paid) {
-    totalRows.push({ label: "Paid",        value: money(paid) });
-    totalRows.push({ label: "Balance due", value: money(balance), bold: true });
+    totalRows.push({ label: "Paid", value: money(paid) });
   }
-  y = totalsBlock(doc, totalRows, { y: y + 0.1, W, M });
+  y = totalsBlock(doc, totalRows, { y: y + 0.2, W, M });
 
-  // Remit-to box
-  y += 0.45;
+  // Prominent Amount Due band — the one number the recipient cares about.
+  y += 0.15;
+  const bandH = 0.5;
+  const bandX = W - M - 3.2;
+  const bandW = 3.2;
+  doc.setFillColor(247, 244, 238);
+  doc.rect(bandX, y, bandW, bandH, "F");
+  doc.setDrawColor(...COPPER);
+  doc.setLineWidth(0.025);
+  doc.line(bandX, y, bandX, y + bandH);
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(9);
+  doc.setTextColor(...MUTED);
+  doc.text("AMOUNT DUE", bandX + 0.18, y + 0.2);
+  doc.setFont("helvetica", "normal");
+  doc.setFontSize(7);
+  doc.text(`Due ${invoice.due_date || "on receipt"}`, bandX + 0.18, y + 0.36);
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(16);
+  doc.setTextColor(...INK);
+  doc.text(money(balance), bandX + bandW - 0.18, y + 0.33, { align: "right" });
+  y += bandH;
+
+  // Remit-to box — framed for visual separation
+  y += 0.55;
+  doc.setDrawColor(...RULE);
+  doc.setLineWidth(0.005);
+  doc.line(M, y - 0.1, W - M, y - 0.1);
   doc.setFont("helvetica", "bold");
   doc.setFontSize(8);
   doc.setTextColor(...MUTED);
-  doc.text("REMIT TO", M, y);
+  doc.text("REMIT TO", M, y + 0.05);
   doc.setFont("helvetica", "normal");
   doc.setFontSize(9);
   doc.setTextColor(...INK);
-  doc.text(`${COMPANY.name}  ·  ${COMPANY.address}`, M, y + 0.18);
-  doc.text(`Make checks payable to "${COMPANY.name}". ACH / wire instructions on request.`, M, y + 0.34);
-  doc.text(`Questions: ${COMPANY.email}  ·  ${COMPANY.phone}`, M, y + 0.5);
+  doc.text(`${COMPANY.name}  ·  ${COMPANY.address}`, M, y + 0.25);
+  doc.setTextColor(...MUTED);
+  doc.text(`Make checks payable to "${COMPANY.name}". ACH / wire instructions on request.`, M, y + 0.43);
+  doc.text(`Questions: ${COMPANY.email}  ·  ${COMPANY.phone}`, M, y + 0.59);
+
+  // Thank-you tagline (right-aligned, subtle)
+  doc.setFont("helvetica", "italic");
+  doc.setFontSize(9);
+  doc.setTextColor(...COPPER);
+  doc.text("Thank you for your business.", W - M, y + 0.59, { align: "right" });
 
   if (invoice.notes) {
-    y += 0.85;
+    y += 0.95;
     doc.setFont("helvetica", "bold");
     doc.setFontSize(8);
     doc.setTextColor(...MUTED);

@@ -6,7 +6,8 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env, params })
   requireActor(request);
   const id = Number(params.id);
   const inv = await env.DB
-    .prepare(`SELECT i.*, c.name AS customer_name, c.email AS customer_email,
+    .prepare(`SELECT i.*, c.name AS customer_name, c.org AS customer_org,
+                     c.email AS customer_email, c.phone AS customer_phone,
                      c.billing_address, p.po_number
               FROM invoices i
               LEFT JOIN customers c ON c.id = i.customer_id

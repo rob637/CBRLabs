@@ -27,7 +27,9 @@ function InvoiceView() {
   // The API returns customer fields flattened onto the invoice row.
   const customer = data ? {
     name:            data.invoice?.customer_name,
+    org:             data.invoice?.customer_org,
     email:           data.invoice?.customer_email,
+    phone:           data.invoice?.customer_phone,
     billing_address: data.invoice?.billing_address,
   } : null;
 
@@ -82,10 +84,14 @@ function InvoiceView() {
       <div className="mt-4 surface p-4 text-sm">
         <div className="eyebrow mb-2">Bill to</div>
         <div className="font-medium">{customer?.name || "—"}</div>
+        {customer?.org && customer.org !== customer.name ? (
+          <div className="font-medium">{customer.org}</div>
+        ) : null}
         {customer?.billing_address ? (
           <div className="whitespace-pre-line text-muted">{customer.billing_address}</div>
         ) : null}
         {customer?.email ? <div className="text-muted">{customer.email}</div> : null}
+        {customer?.phone ? <div className="text-muted">{customer.phone}</div> : null}
       </div>
 
       <div className="mt-6 grid gap-4 sm:grid-cols-3">

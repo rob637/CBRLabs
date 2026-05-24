@@ -106,7 +106,21 @@ function InvoiceForm({ customers, pos, onSaved }) {
   const [poId, setPoId] = useState("");
   const [fromPo, setFromPo] = useState(true);
   const [issueDate, setIssueDate] = useState(new Date().toISOString().slice(0, 10));
-  const [dueDate, setDueDate] = useState("");
+  const [dueDate, setDueDate] = useState(() => {
+    const d = new Date();
+    d.setDate(d.getDate() + 30);
+    return d.toISOString().slice(0, 10);
+  });
+
+  // Keep due date locked to issue + 30 unless the user manually edits it.
+  const [dueTouched, setDueTouched] = useState(false);
+  useEffect(() => {
+    if (dueTouched || !issueDate) return;
+    const d = new Date(issueDate + "T00:00:00");
+    if (isNaN(d.getTime())) return;
+    d.setDate(d.getDate() + 30);
+    setDueDate(d.toISOString().slice(0, 10));
+  }, [issueDate, dueTouched]);
 
   async function submit(e) {
     e.preventDefault();
@@ -150,7 +164,7 @@ function InvoiceForm({ customers, pos, onSaved }) {
       </label>
       <label className="text-sm">
         <span className="eyebrow">Due date</span>
-        <input type="date" value={dueDate} onChange={(e) => setDueDate(e.target.value)}
+        <input type="date" value={dueDate} onChange={(e) => { setDueTouched(true); setDueDate(e.target.value); }}
           className="mt-1 w-full rounded border hairline bg-paper px-3 py-2" />
       </label>
       {poId ? (
