@@ -65,7 +65,7 @@ export default function HomePage() {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }} />
 
       {/* HERO */}
-      <section className="container-xl pt-16 pb-10 sm:pt-24 sm:pb-12">
+      <section className="container-xl pt-8 pb-8 sm:pt-12 sm:pb-10">
         <Reveal>
           <div className="eyebrow">Hardware redaction · iPad &amp; Android</div>
         </Reveal>
@@ -107,7 +107,7 @@ export default function HomePage() {
       </section>
 
       {/* FEDERAL CREDENTIALS — visible above the fold for gov buyers */}
-      <section className="container-xl pb-8">
+      <section className="container-xl pb-6">
         <Reveal>
           <div className="surface overflow-hidden">
             <div className="grid items-center gap-px bg-ink/[0.08] sm:grid-cols-2 lg:grid-cols-5">
@@ -142,24 +142,24 @@ export default function HomePage() {
       </section>
 
       {/* HERO FIGURE */}
-      <section className="container-xl pb-12 sm:pb-16">
+      <section className="container-xl pb-10 sm:pb-12">
         <Reveal>
           <figure className="brand-figure aspect-[16/9] sm:aspect-[21/9]">
             <Image
               src="/images/home-tablet.jpg"
-              alt="iPad and Apple Pencil on a stone surface — representative of the tablet platforms CBR Labs redacts at the silicon level."
+              alt="Hands using a precision screwdriver inside an opened tablet — exposing the green logic board, ribbon cables, and shielded modules that CBR Labs removes at the silicon."
               fill
               priority
               sizes="(min-width: 1024px) 1024px, 100vw"
               className="object-cover"
             />
-            <figcaption className="brand-figure-caption">iPad &amp; Android · Redacted at the board</figcaption>
+            <figcaption className="brand-figure-caption">Opened at the bench · Components removed, not toggled</figcaption>
           </figure>
         </Reveal>
       </section>
 
       {/* STATS */}
-      <section className="container-xl pb-16">
+      <section className="container-xl pb-12">
         <div className="surface overflow-hidden">
           <div className="grid grid-cols-2 md:grid-cols-4">
             {stats.map((s, i) => {
@@ -179,7 +179,7 @@ export default function HomePage() {
       </section>
 
       {/* CAPABILITIES */}
-      <section className="container-xl py-20">
+      <section className="container-xl py-16">
         <div className="grid gap-12 lg:grid-cols-12">
           <div className="lg:col-span-5">
             <Reveal><div className="eyebrow">What we remove</div></Reveal>
@@ -219,7 +219,7 @@ export default function HomePage() {
       </section>
 
       {/* FAQ */}
-      <section className="container-xl py-20">
+      <section className="container-xl py-16">
         <Reveal><div className="eyebrow">Frequently asked</div></Reveal>
         <Reveal delay={80}>
           <h2 className="mt-6 max-w-3xl font-display text-4xl font-medium tracking-tightest sm:text-5xl">
@@ -243,7 +243,7 @@ export default function HomePage() {
       </section>
 
       {/* CTA */}
-      <section className="container-xl py-20">
+      <section className="container-xl py-16">
         <Reveal>
           <div className="surface relative overflow-hidden p-10 sm:p-16">
             <div className="grid items-center gap-8 lg:grid-cols-12">
