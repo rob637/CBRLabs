@@ -13,6 +13,37 @@ export const metadata = {
   alternates: { canonical: "/services" },
 };
 
+const serviceJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Service",
+  serviceType: "Hardware redaction for tablets",
+  name: "CBR Labs Tablet Hardware Redaction",
+  description:
+    "Permanent, silicon-level removal of cameras, microphones, speakers, Wi-Fi, Bluetooth, and cellular/GPS antennas from iPad and Android tablets. Each device ships with a serial-numbered Certificate of Redaction.",
+  provider: {
+    "@type": "Organization",
+    name: "CBR Labs LLC",
+    url: "https://cbr-labs.com",
+  },
+  areaServed: "US",
+  url: "https://cbr-labs.com/services",
+  hasOfferCatalog: {
+    "@type": "OfferCatalog",
+    name: "Redaction capabilities",
+    itemListElement: [
+      "Camera removal",
+      "Microphone removal",
+      "Speaker removal",
+      "Wi-Fi removal",
+      "Bluetooth removal",
+      "Cellular & GPS antenna removal",
+    ].map((n) => ({
+      "@type": "Offer",
+      itemOffered: { "@type": "Service", name: n },
+    })),
+  },
+};
+
 const services = [
   {
     Icon: CameraIcon, title: "Cameras", tag: "Optical",
@@ -49,6 +80,10 @@ const services = [
 export default function Services() {
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(serviceJsonLd) }}
+      />
       <section className="container-xl pt-20 pb-12">
         <div className="grid items-end gap-10 lg:grid-cols-12">
           <div className="lg:col-span-7">

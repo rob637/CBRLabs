@@ -1,0 +1,33 @@
+# Cloudflare Pages redirects
+# Format: <from>  <to>  <status>
+# 301 = permanent (passes SEO link equity); 302 = temporary.
+
+# Old static site (.html URLs) — preserve every indexed page's link equity.
+/index.html          /                  301
+/services.html       /services          301
+/industries.html     /industries        301
+/process.html        /process           301
+/compliance.html     /compliance        301
+/government.html     /government        301
+/contact.html        /contact           301
+/neutered-ipad.html  /neutered-ipad     301
+/about.html          /about             301
+/security.html       /security          301
+/faq.html            /faq               301
+/resources.html      /resources         301
+
+# Old asset paths from the previous site (capability statement PDF etc.)
+/assets/docs/CBR_Labs_Capability_Statement.pdf  /resources  301
+/assets/*            /                  301
+
+# Retired routes — preserve link equity from any external/Google-indexed links.
+/case-studies        /industries        301
+/case-studies/*      /industries        301
+
+# Common alt-spellings of the product (people search "neutered" with multiple spellings)
+/neutered-ipads      /neutered-ipad     301
+/nuetered-ipad       /neutered-ipad     301
+/nuetered-ipads      /neutered-ipad     301
+
+# www → apex (Cloudflare DNS should also enforce; this is belt + suspenders)
+https://www.cbr-labs.com/*   https://cbr-labs.com/:splat   301

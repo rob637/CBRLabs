@@ -13,7 +13,6 @@ const nav = {
     ["About", "/about"],
     ["Industries", "/industries"],
     ["Government", "/government"],
-    ["Case studies", "/case-studies"],
     ["FAQ", "/faq"],
     ["Resources", "/resources"],
     ["Contact", "/contact"],

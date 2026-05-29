@@ -18,3 +18,8 @@
 
 /public/*
   Cache-Control: no-store
+
+# Admin app is behind Cloudflare Access — also tell crawlers to stay out,
+# in case a path ever leaks via a link or screenshot.
+/admin/*
+  X-Robots-Tag: noindex, nofollow

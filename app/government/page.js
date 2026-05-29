@@ -9,6 +9,30 @@ export const metadata = {
   alternates: { canonical: "/government" },
 };
 
+const govServiceJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "GovernmentService",
+  name: "Hardware redaction for federal, state, and local agencies",
+  serviceType: "Tablet hardware redaction",
+  description:
+    "WOSB-eligible, SAM.gov-registered provider of permanent tablet hardware redaction. CAGE 14Y35, UEI K4MZG4KC1MY9. Supports BPA, IDIQ, simplified acquisition, and direct PO procurement.",
+  provider: {
+    "@type": "Organization",
+    name: "CBR Labs LLC",
+    url: "https://cbr-labs.com",
+    identifier: [
+      { "@type": "PropertyValue", propertyID: "CAGE", value: "14Y35" },
+      { "@type": "PropertyValue", propertyID: "UEI",  value: "K4MZG4KC1MY9" },
+    ],
+  },
+  areaServed: "US",
+  audience: {
+    "@type": "GovernmentAudience",
+    name: "US federal, state, and local government agencies",
+  },
+  url: "https://cbr-labs.com/government",
+};
+
 const facts = [
   ["SAM.gov", "Active registration", "Ready for federal award"],
   ["Business classification", "Woman Owned Small Business", "WOSB / EDWOSB set-aside eligible"],
@@ -72,6 +96,10 @@ const who = [
 export default function GovernmentPage() {
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(govServiceJsonLd) }}
+      />
       <section className="container-xl pt-20 pb-12">
         <div className="grid items-end gap-10 lg:grid-cols-12">
           <div className="lg:col-span-7">
