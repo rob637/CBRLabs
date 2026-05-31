@@ -1,12 +1,19 @@
 import Link from "next/link";
 import Reveal from "../../components/Reveal";
+import { Breadcrumbs } from "../../components/SEO";
 import { ShieldIcon, CheckIcon, ArrowRightIcon } from "../../components/Icons";
 
 export const metadata = {
   title: "Government Contracting",
   description:
     "CBR Labs LLC — Woman Owned Small Business (WOSB), SAM.gov registered, CAGE 14Y35, UEI K4MZG4KC1MY9. Hardware redaction for federal, state, and local government agencies. Net-30, BPA-ready.",
-  alternates: { canonical: "/government" },
+  alternates: { canonical: "/government/" },
+  openGraph: {
+    title: "Government Contracting — CBR Labs",
+    description:
+      "WOSB, SAM.gov-registered. CAGE 14Y35, UEI K4MZG4KC1MY9. Tablet hardware redaction for federal, state, and local agencies.",
+    url: "https://cbr-labs.com/government/",
+  },
 };
 
 const govServiceJsonLd = {
@@ -96,6 +103,7 @@ const who = [
 export default function GovernmentPage() {
   return (
     <>
+      <Breadcrumbs items={[{ name: "Government", path: "/government/" }]} />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(govServiceJsonLd) }}

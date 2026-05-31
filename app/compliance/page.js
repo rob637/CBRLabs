@@ -1,11 +1,18 @@
 import Image from "next/image";
 import Reveal from "../../components/Reveal";
+import { Breadcrumbs } from "../../components/SEO";
 
 export const metadata = {
   title: "Compliance & Disclosures",
   description:
     "Plain-language disclosures for procurement, legal, and risk teams: warranty impact, trademark posture, and customer responsibilities.",
-  alternates: { canonical: "/compliance" },
+  alternates: { canonical: "/compliance/" },
+  openGraph: {
+    title: "Compliance & Disclosures — CBR Labs",
+    description:
+      "Warranty impact, trademark posture, and customer responsibilities. Plain-language disclosures for procurement and legal teams.",
+    url: "https://cbr-labs.com/compliance/",
+  },
 };
 
 const points = [
@@ -34,6 +41,7 @@ const points = [
 export default function Compliance() {
   return (
     <>
+      <Breadcrumbs items={[{ name: "Compliance", path: "/compliance/" }]} />
       <section className="container-xl pt-20 pb-12">
         <div className="grid items-end gap-10 lg:grid-cols-12">
           <div className="lg:col-span-7">

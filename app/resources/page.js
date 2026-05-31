@@ -1,12 +1,19 @@
 import Link from "next/link";
 import Reveal from "../../components/Reveal";
+import { Breadcrumbs } from "../../components/SEO";
 import { CertIcon, ArrowRightIcon } from "../../components/Icons";
 
 export const metadata = {
   title: "Resources",
   description:
     "Spec sheets, sample documentation, and reference material for procurement, legal, and IT teams evaluating hardware redaction.",
-  alternates: { canonical: "/resources" },
+  alternates: { canonical: "/resources/" },
+  openGraph: {
+    title: "Resources — CBR Labs",
+    description:
+      "Spec sheets, sample Certificates of Redaction, and reference material for procurement, legal, and IT teams.",
+    url: "https://cbr-labs.com/resources/",
+  },
 };
 
 const resources = [
@@ -19,6 +26,7 @@ const resources = [
 export default function Resources() {
   return (
     <>
+      <Breadcrumbs items={[{ name: "Resources", path: "/resources/" }]} />
       <section className="container-xl pt-20 pb-12">
         <Reveal><div className="eyebrow">Resources</div></Reveal>
         <Reveal delay={80}>

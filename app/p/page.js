@@ -2,7 +2,10 @@
 import { Suspense } from "react";
 import ProposalViewer from "./Viewer";
 
-export const metadata = { title: "Proposal — CBR Labs" };
+export const metadata = {
+  title: "Proposal — CBR Labs",
+  robots: { index: false, follow: false },
+};
 
 export default function Page() {
   return (

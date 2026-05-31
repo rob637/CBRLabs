@@ -1,12 +1,19 @@
 import Image from "next/image";
 import Reveal from "../../components/Reveal";
+import { Breadcrumbs } from "../../components/SEO";
 import { ShieldIcon, BuildingIcon, HospitalIcon, ScaleIcon, FactoryIcon, CapIcon } from "../../components/Icons";
 
 export const metadata = {
   title: "Industries",
   description:
     "CBR Labs delivers redacted tablets to defense, corrections, healthcare, legal, manufacturing, and education programs.",
-  alternates: { canonical: "/industries" },
+  alternates: { canonical: "/industries/" },
+  openGraph: {
+    title: "Industries — CBR Labs",
+    description:
+      "Redacted tablets for defense, corrections, healthcare, legal, manufacturing, and education programs.",
+    url: "https://cbr-labs.com/industries/",
+  },
 };
 
 const sectors = [
@@ -33,6 +40,7 @@ const sectors = [
 export default function Industries() {
   return (
     <>
+      <Breadcrumbs items={[{ name: "Industries", path: "/industries/" }]} />
       <section className="container-xl pt-20 pb-12">
         <div className="grid items-end gap-10 lg:grid-cols-12">
           <div className="lg:col-span-7">

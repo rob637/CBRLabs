@@ -1,12 +1,19 @@
 import Link from "next/link";
 import Reveal from "../../components/Reveal";
+import { Breadcrumbs } from "../../components/SEO";
 import { ShieldIcon, CertIcon, CheckIcon, ArrowRightIcon } from "../../components/Icons";
 
 export const metadata = {
   title: "About",
   description:
     "CBR Labs is a US-based hardware redaction service for organizations that cannot allow cameras, microphones, or wireless radios on issued tablets.",
-  alternates: { canonical: "/about" },
+  alternates: { canonical: "/about/" },
+  openGraph: {
+    title: "About CBR Labs",
+    description:
+      "US-based hardware redaction service for organizations that cannot allow cameras, microphones, or wireless radios on issued tablets.",
+    url: "https://cbr-labs.com/about/",
+  },
 };
 
 const values = [
@@ -18,6 +25,7 @@ const values = [
 export default function About() {
   return (
     <>
+      <Breadcrumbs items={[{ name: "About", path: "/about/" }]} />
       <section className="container-xl pt-20 pb-12">
         <Reveal><div className="eyebrow">About CBR Labs</div></Reveal>
         <Reveal delay={80}>

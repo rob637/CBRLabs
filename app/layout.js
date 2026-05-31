@@ -20,18 +20,6 @@ export const metadata = {
     "CBR Labs permanently redacts cameras, microphones, speakers, Wi-Fi, Bluetooth, and antennas from iPad and Android tablets — purpose-built devices for SCIFs, courtrooms, hospitals, and correctional facilities.",
   applicationName: "CBR Labs",
   authors: [{ name: "CBR Labs LLC" }],
-  keywords: [
-    "hardware redaction",
-    "redacted iPad",
-    "camera-removed tablet",
-    "SCIF iPad",
-    "secure tablet",
-    "no camera tablet",
-    "no microphone iPad",
-    "tablet hardening",
-    "corrections tablet",
-    "HIPAA tablet",
-  ],
   alternates: { canonical: "/" },
   openGraph: {
     type: "website",
@@ -68,9 +56,19 @@ export const viewport = {
 
 const themeScript = `(() => { try { const t = localStorage.getItem('theme'); const m = window.matchMedia('(prefers-color-scheme: dark)').matches; if (t === 'dark' || (!t && m)) document.documentElement.classList.add('dark'); } catch (e) {} })();`;
 
+const websiteJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "@id": `${SITE_URL}#website`,
+  name: "CBR Labs",
+  url: SITE_URL,
+  publisher: { "@id": `${SITE_URL}#organization` },
+};
+
 const orgJsonLd = {
   "@context": "https://schema.org",
   "@type": "Organization",
+  "@id": `${SITE_URL}#organization`,
   name: "CBR Labs LLC",
   url: SITE_URL,
   logo: `${SITE_URL}/og.png`,
@@ -139,6 +137,10 @@ export default function RootLayout({ children }) {
     >
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd) }}
+        />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(orgJsonLd) }}

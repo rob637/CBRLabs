@@ -1,12 +1,19 @@
 import Link from "next/link";
 import Reveal from "../../components/Reveal";
+import { Breadcrumbs } from "../../components/SEO";
 import { ArrowRightIcon } from "../../components/Icons";
 
 export const metadata = {
   title: "Frequently Asked Questions",
   description:
     "Common questions from procurement, IT security, and compliance teams about CBR Labs hardware redaction for iPad and Android tablets.",
-  alternates: { canonical: "/faq" },
+  alternates: { canonical: "/faq/" },
+  openGraph: {
+    title: "FAQ — CBR Labs",
+    description:
+      "Procurement, IT security, and compliance questions about hardware redaction for iPad and Android tablets.",
+    url: "https://cbr-labs.com/faq/",
+  },
 };
 
 const sections = [
@@ -124,6 +131,7 @@ const faqJsonLd = {
 export default function FaqPage() {
   return (
     <>
+      <Breadcrumbs items={[{ name: "FAQ", path: "/faq/" }]} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }} />
 
       <section className="container-xl pt-20 pb-12">

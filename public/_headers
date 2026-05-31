@@ -23,3 +23,10 @@
 # in case a path ever leaks via a link or screenshot.
 /admin/*
   X-Robots-Tag: noindex, nofollow
+
+# Token-bearing public viewers (proposals + verification) — every URL renders
+# different content per query string; nothing here belongs in a search index.
+/p/*
+  X-Robots-Tag: noindex, nofollow
+/v/*
+  X-Robots-Tag: noindex, nofollow

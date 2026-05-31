@@ -1,25 +1,20 @@
 import Image from "next/image";
 import Link from "next/link";
 import Reveal from "../../components/Reveal";
+import { Breadcrumbs } from "../../components/SEO";
 import { ArrowRightIcon, CheckIcon } from "../../components/Icons";
 
 export const metadata = {
   title: "Neutered iPad — SCIF-Ready Hardware Redaction",
   description:
     "CBR Labs provides Neutered iPad solutions (sometimes spelled Nuetered iPad) — permanent, hardware-level removal of cameras, microphones, speakers, Wi-Fi, Bluetooth, and cellular for SCIFs, defense, intelligence, and corrections deployments.",
-  alternates: { canonical: "/neutered-ipad" },
-  keywords: [
-    "neutered ipad",
-    "nuetered ipad",
-    "ipad neutering",
-    "scif ipad",
-    "secure ipad",
-    "ipad camera removal",
-    "ipad microphone removal",
-    "hardware redaction",
-    "no-camera ipad",
-    "no-wireless ipad",
-  ],
+  alternates: { canonical: "/neutered-ipad/" },
+  openGraph: {
+    title: "Neutered iPad — SCIF-Ready Hardware Redaction",
+    description:
+      "Permanent, hardware-level removal of cameras, microphones, speakers, Wi-Fi, Bluetooth, and cellular for SCIFs, defense, intelligence, and corrections.",
+    url: "https://cbr-labs.com/neutered-ipad/",
+  },
 };
 
 const removals = [
@@ -43,6 +38,7 @@ const useCases = [
 export default function NeuteredIPad() {
   return (
     <>
+      <Breadcrumbs items={[{ name: "Neutered iPad", path: "/neutered-ipad/" }]} />
       <section className="container-xl pt-16 pb-10">
         <Reveal>
           <figure className="brand-figure aspect-[21/9]">

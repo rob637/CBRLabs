@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Reveal from "../../components/Reveal";
+import { Breadcrumbs } from "../../components/SEO";
 import { CheckIcon } from "../../components/Icons";
 import ContactForm from "./ContactForm";
 
@@ -7,12 +8,19 @@ export const metadata = {
   title: "Contact",
   description:
     "Talk to Rob Pfleghardt at CBR Labs about hardware redaction for iPad and Android tablets. SAM.gov registered. Typical response: one business day.",
-  alternates: { canonical: "/contact" },
+  alternates: { canonical: "/contact/" },
+  openGraph: {
+    title: "Contact CBR Labs",
+    description:
+      "Request a quote for hardware redaction. SAM.gov registered, WOSB. Typical response within one business day.",
+    url: "https://cbr-labs.com/contact/",
+  },
 };
 
 export default function Contact() {
   return (
     <>
+      <Breadcrumbs items={[{ name: "Contact", path: "/contact/" }]} />
       <section className="container-xl pt-16 pb-10">
         <Reveal>
           <figure className="brand-figure aspect-[21/8] sm:aspect-[21/7]">

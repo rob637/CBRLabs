@@ -1,12 +1,19 @@
 import Link from "next/link";
 import Reveal from "../../components/Reveal";
+import { Breadcrumbs } from "../../components/SEO";
 import { ShieldIcon, CertIcon, CheckIcon, ArrowRightIcon } from "../../components/Icons";
 
 export const metadata = {
   title: "Security & Custody",
   description:
     "How CBR Labs handles your devices: air-gapped redaction, photo evidence, signed certificates, background-checked technicians, and a US-only chain of custody.",
-  alternates: { canonical: "/security" },
+  alternates: { canonical: "/security/" },
+  openGraph: {
+    title: "Security & Custody — CBR Labs",
+    description:
+      "Air-gapped redaction, photo evidence per device, signed Certificates of Redaction, and a US-only chain of custody.",
+    url: "https://cbr-labs.com/security/",
+  },
 };
 
 const pillars = [
@@ -65,6 +72,7 @@ const promises = [
 export default function SecurityPage() {
   return (
     <>
+      <Breadcrumbs items={[{ name: "Security", path: "/security/" }]} />
       <section className="container-xl pt-20 pb-12">
         <div className="grid items-end gap-10 lg:grid-cols-12">
           <div className="lg:col-span-7">

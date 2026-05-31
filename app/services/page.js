@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import Reveal from "../../components/Reveal";
+import { Breadcrumbs } from "../../components/SEO";
 import {
   CameraIcon, MicIcon, SpeakerIcon, WifiIcon, BluetoothIcon, AntennaIcon,
   CertIcon, ArrowRightIcon,
@@ -10,7 +11,13 @@ export const metadata = {
   title: "Services",
   description:
     "Hardware redaction services for iPad and Android tablets: cameras, microphones, speakers, Wi-Fi, Bluetooth, and antennas — with a signed Certificate of Redaction.",
-  alternates: { canonical: "/services" },
+  alternates: { canonical: "/services/" },
+  openGraph: {
+    title: "Services — CBR Labs",
+    description:
+      "Per-component redaction for iPad and Android tablets: cameras, microphones, speakers, Wi-Fi, Bluetooth, and antennas. Signed Certificate of Redaction with every device.",
+    url: "https://cbr-labs.com/services/",
+  },
 };
 
 const serviceJsonLd = {
@@ -80,6 +87,7 @@ const services = [
 export default function Services() {
   return (
     <>
+      <Breadcrumbs items={[{ name: "Services", path: "/services/" }]} />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(serviceJsonLd) }}

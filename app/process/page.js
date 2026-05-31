@@ -1,13 +1,20 @@
 import Link from "next/link";
 import Image from "next/image";
 import Reveal from "../../components/Reveal";
+import { Breadcrumbs } from "../../components/SEO";
 import { ArrowRightIcon } from "../../components/Icons";
 
 export const metadata = {
   title: "Process",
   description:
     "A four-step path to audit-ready redacted tablets: scope, chain of custody, redact and verify, return and support.",
-  alternates: { canonical: "/process" },
+  alternates: { canonical: "/process/" },
+  openGraph: {
+    title: "Process — CBR Labs",
+    description:
+      "Scope, chain of custody, redact and verify, return and support — a four-step path to audit-ready redacted tablets.",
+    url: "https://cbr-labs.com/process/",
+  },
 };
 
 const steps = [
@@ -20,6 +27,7 @@ const steps = [
 export default function Process() {
   return (
     <>
+      <Breadcrumbs items={[{ name: "Process", path: "/process/" }]} />
       <section className="container-xl pt-20 pb-12">
         <Reveal><div className="eyebrow">How it works</div></Reveal>
         <Reveal delay={80}>
