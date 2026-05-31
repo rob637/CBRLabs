@@ -123,7 +123,12 @@ export default function GovernmentPage() {
                 CBR Labs LLC is registered in SAM.gov and ready to receive
                 federal, state, and local government purchase orders. Below:
                 the codes your contracting officer will ask for, the vehicles
-                we work under, and the agencies we serve.
+                we work under, and the agencies we serve. For SCIF programs,
+                see our note on{" "}
+                <Link href="/notes/icd-705-tablets-scif/" className="text-accent underline-offset-4 hover:underline">
+                  ICD 705 and tablets
+                </Link>
+                .
               </p>
             </Reveal>
           </div>

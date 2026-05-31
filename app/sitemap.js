@@ -19,7 +19,10 @@ const routes = [
   { path: "/about/",         priority: 0.7, changeFrequency: "yearly" },
   { path: "/resources/",     priority: 0.6, changeFrequency: "monthly" },
   { path: "/notes/",         priority: 0.6, changeFrequency: "weekly" },
-  { path: "/notes/mdm-vs-hardware-redaction/", priority: 0.6, changeFrequency: "yearly" },
+  { path: "/notes/mdm-vs-hardware-redaction/",            priority: 0.6, changeFrequency: "yearly" },
+  { path: "/notes/what-is-in-a-certificate-of-redaction/",priority: 0.6, changeFrequency: "yearly" },
+  { path: "/notes/icd-705-tablets-scif/",                 priority: 0.6, changeFrequency: "yearly" },
+  { path: "/notes/hipaa-ambient-capture-bedside-tablet/", priority: 0.6, changeFrequency: "yearly" },
   { path: "/faq/",           priority: 0.6, changeFrequency: "monthly" },
   { path: "/contact/",       priority: 0.6, changeFrequency: "yearly" },
 ];

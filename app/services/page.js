@@ -108,6 +108,11 @@ export default function Services() {
                 cannot be re-enabled by software update, firmware reflash, jailbreak,
                 or supply-chain manipulation. We service Apple iPad and leading
                 Android tablets — including Samsung Galaxy Tab and Google Pixel Tablet.
+                For programs that ask why hardware, not MDM, see{" "}
+                <Link href="/notes/mdm-vs-hardware-redaction/" className="text-accent underline-offset-4 hover:underline">
+                  MDM vs. hardware redaction
+                </Link>
+                .
               </p>
             </Reveal>
           </div>

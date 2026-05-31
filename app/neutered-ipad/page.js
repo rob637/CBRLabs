@@ -69,7 +69,11 @@ export default function NeuteredIPad() {
             component that can capture or transmit. These modifications make iPads suitable for use
             in <strong className="text-ink">SCIFs</strong>, government agencies, defense
             contractors, intelligence operations, and any environment that prohibits cameras,
-            microphones, or wireless radios.
+            microphones, or wireless radios. For the accreditation angle, read{" "}
+            <Link href="/notes/icd-705-tablets-scif/" className="text-accent underline-offset-4 hover:underline">
+              ICD 705 and tablets
+            </Link>
+            .
           </p>
         </Reveal>
 
