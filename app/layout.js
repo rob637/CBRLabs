@@ -94,6 +94,11 @@ const orgJsonLd = {
   description:
     "Hardware redaction services — permanent removal of cameras, microphones, and wireless radios from iPad and Android tablets.",
   areaServed: "US",
+  parentOrganization: {
+    "@type": "Organization",
+    name: "SageCG",
+    url: "https://www.sagecg.com",
+  },
   sameAs: [],
 };
 

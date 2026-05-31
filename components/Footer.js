@@ -85,6 +85,20 @@ export default function Footer() {
               provider and is not affiliated with any device manufacturer.
             </p>
           </div>
+
+          <div className="rule mt-6" />
+          <p className="mt-6 font-mono text-[10px] uppercase tracking-[0.18em] text-muted">
+            A{" "}
+            <a
+              href="https://www.sagecg.com"
+              target="_blank"
+              rel="noopener"
+              className="text-ink/80 underline underline-offset-4 decoration-current/20 hover:text-accent transition-colors"
+            >
+              SageCG
+            </a>{" "}
+            Venture Studio Company
+          </p>
         </div>
       </div>
     </footer>
