@@ -2,12 +2,16 @@ import Link from "next/link";
 import Reveal from "../../components/Reveal";
 import { Breadcrumbs } from "../../components/SEO";
 import { ArrowRightIcon } from "../../components/Icons";
+import { posts } from "./_posts";
 
 export const metadata = {
   title: "Notes",
   description:
     "Short, plain-language notes from CBR Labs on hardware redaction, SCIF policy, MDM vs. silicon-level removal, and what auditors look for in a tablet program.",
-  alternates: { canonical: "/notes/" },
+  alternates: {
+    canonical: "/notes/",
+    types: { "application/rss+xml": "/notes/feed.xml" },
+  },
   openGraph: {
     title: "Notes — CBR Labs",
     description:
@@ -17,40 +21,7 @@ export const metadata = {
 };
 
 // Keep posts in sync with app/sitemap.js. Newest first.
-export const posts = [
-  {
-    slug: "hipaa-ambient-capture-bedside-tablet",
-    title: "HIPAA, ambient capture, and the tablet at the bedside",
-    date: "2026-05-31",
-    excerpt:
-      "A tablet with a live microphone in a patient room is a HIPAA exposure even when no app is listening. Why ambient capture is the quiet risk in healthcare tablet programs.",
-    readingMinutes: 7,
-  },
-  {
-    slug: "icd-705-tablets-scif",
-    title: "ICD 705 and tablets: what's actually allowed in a SCIF",
-    date: "2026-05-31",
-    excerpt:
-      "ICD 705 doesn’t list iPads by name. It governs what can record, transmit, or geolocate inside a SCIF. Here’s how that translates to a tablet you’d want to bring inside.",
-    readingMinutes: 7,
-  },
-  {
-    slug: "what-is-in-a-certificate-of-redaction",
-    title: "What's actually in a Certificate of Redaction",
-    date: "2026-05-31",
-    excerpt:
-      "An auditor asks: what does CBR Labs ship with each redacted tablet? A field-by-field walkthrough of the certificate and the evidence packet behind it.",
-    readingMinutes: 6,
-  },
-  {
-    slug: "mdm-vs-hardware-redaction",
-    title: "MDM vs. hardware redaction: why a policy is not a sensor",
-    date: "2026-05-31",
-    excerpt:
-      "Mobile Device Management can disable a camera. It cannot remove one. For programs where capture is not just discouraged but forbidden, the distinction matters.",
-    readingMinutes: 6,
-  },
-];
+export { posts };
 
 export default function NotesIndex() {
   return (
