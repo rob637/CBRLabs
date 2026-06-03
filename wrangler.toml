@@ -40,3 +40,8 @@ COMPANY_ADDRESS_1 = "5927 Tilbury Road"
 COMPANY_ADDRESS_2 = "Alexandria, VA 22310"
 INVOICE_PREFIX    = "CBR"
 TAG_YEAR_PREFIX   = "CBR"
+
+# Public analytics IDs — inlined into the Next.js static bundle at build time.
+# Safe to commit; these are public identifiers, not secrets.
+NEXT_PUBLIC_GA_ID   = "G-BYYT8XG1V2"   # Google Analytics 4 (cbr-labs.com web stream)
+NEXT_PUBLIC_GADS_ID = ""               # e.g. "AW-XXXXXXXXXX" (Google Ads — add when ready)
