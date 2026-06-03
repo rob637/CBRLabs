@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { ArrowRightIcon, CheckIcon } from "../../components/Icons";
+import { trackEvent } from "../../components/Analytics";
 
 const inputClass =
   "mt-1 w-full rounded-xl border bg-paper px-4 py-3 text-sm text-ink placeholder:text-muted focus:outline-none focus:border-accent hairline";
@@ -35,6 +36,11 @@ export default function ContactForm() {
       });
       const j = await r.json().catch(() => ({}));
       if (!r.ok) throw new Error(j.error || "Submission failed. Please email rob@cbr-labs.com.");
+      trackEvent("generate_lead", {
+        currency: "USD",
+        value: 1,
+        form_source: "contact-form",
+      });
       setSent(true);
       f.reset();
     } catch (ex) { setErr(ex.message); } finally { setBusy(false); }
