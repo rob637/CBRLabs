@@ -43,5 +43,5 @@ TAG_YEAR_PREFIX   = "CBR"
 
 # Public analytics IDs — inlined into the Next.js static bundle at build time.
 # Safe to commit; these are public identifiers, not secrets.
-NEXT_PUBLIC_GA_ID   = "G-BYYT8XG1V2"   # Google Analytics 4 (cbr-labs.com web stream)
-NEXT_PUBLIC_GADS_ID = ""               # e.g. "AW-XXXXXXXXXX" (Google Ads — add when ready)
+NEXT_PUBLIC_GA_ID   = "G-BYYT8XG1V2"     # Google Analytics 4 (cbr-labs.com web stream)
+NEXT_PUBLIC_GADS_ID = "AW-18210200054"   # Google Ads (CBR Labs — Lead Search campaign)

@@ -96,11 +96,11 @@ export default function HomePage() {
         {/* Trust strip */}
         <Reveal delay={320}>
           <div className="mt-10 surface px-5 py-4 sm:px-6">
-            <ul className="grid grid-cols-2 gap-x-4 gap-y-3 font-mono text-[11px] uppercase tracking-[0.12em] text-muted md:grid-cols-4">
-              <li className="flex items-center gap-2 whitespace-nowrap"><CheckIcon size={14} className="text-accent shrink-0" /> US-based facility</li>
-              <li className="flex items-center gap-2 whitespace-nowrap"><CheckIcon size={14} className="text-accent shrink-0" /> Background-checked</li>
-              <li className="flex items-center gap-2 whitespace-nowrap"><CheckIcon size={14} className="text-accent shrink-0" /> Woman Owned Small Business</li>
-              <li className="flex items-center gap-2 whitespace-nowrap"><CheckIcon size={14} className="text-accent shrink-0" /> SAM.gov · CAGE 14Y35</li>
+            <ul className="grid grid-cols-1 gap-x-4 gap-y-3 font-mono text-[11px] uppercase tracking-[0.12em] text-muted sm:grid-cols-2 md:grid-cols-4">
+              <li className="flex items-start gap-2"><CheckIcon size={14} className="mt-0.5 text-accent shrink-0" /> <span>US-based facility</span></li>
+              <li className="flex items-start gap-2"><CheckIcon size={14} className="mt-0.5 text-accent shrink-0" /> <span>Background-checked</span></li>
+              <li className="flex items-start gap-2"><CheckIcon size={14} className="mt-0.5 text-accent shrink-0" /> <span>Woman Owned Small Business</span></li>
+              <li className="flex items-start gap-2"><CheckIcon size={14} className="mt-0.5 text-accent shrink-0" /> <span>SAM.gov · CAGE 14Y35</span></li>
             </ul>
           </div>
         </Reveal>

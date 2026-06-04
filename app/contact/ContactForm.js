@@ -41,6 +41,11 @@ export default function ContactForm() {
         value: 1,
         form_source: "contact-form",
       });
+      // Google Ads conversion (SUBMIT_LEAD_FORM in CBR Labs Ads account)
+      trackEvent("conversion_event_submit_lead_form", {
+        value: 100,
+        currency: "USD",
+      });
       setSent(true);
       f.reset();
     } catch (ex) { setErr(ex.message); } finally { setBusy(false); }
